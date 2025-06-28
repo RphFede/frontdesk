@@ -1,0 +1,39 @@
+<nav class="app-navigation">
+    <button class="nav-btn active" data-view="dashboard">
+      📊 Resumen
+    </button>
+    <button class="nav-btn" data-view="invoices">
+      🧾 Facturas
+    </button>
+    <button class="nav-btn" data-view="suppliers">
+      🏢 Proveedores
+    </button>
+    <button class="nav-btn" data-view="export">
+      📤 Exportar
+    </button>
+    <button class="nav-btn" data-view="settings">
+      ⚙️ Configuración
+    </button>
+</nav>
+
+<style lang="stylus">
+.app-navigation
+    display flex
+    gap 1rem
+    padding 1rem
+    background var(--bg-secondary)
+    border-bottom 1px solid var(--border-color)
+    
+.nav-btn
+    padding 0.5rem 1rem
+    border none
+    background var(--bg-card)
+    border-radius 4px
+    cursor pointer
+    transition all 0.2s
+    color var(--text-secondary)
+    
+.nav-btn.active
+    background var(--accent-primary)
+    color var(--bg-primary)
+</style>
