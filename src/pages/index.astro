@@ -42,6 +42,7 @@ import Settings from '../views/Settings.astro';
       <Settings />
     </div>
   </main>
+</AppLayout>
 
   <script>
     // Navegación SPA mejorada
@@ -165,34 +166,5 @@ import Settings from '../views/Settings.astro';
       to
         opacity 1
         transform translateY(0)
-  </style>
-</AppLayout>
-
-<style lang="stylus">    
-    .app-main
-      padding 2rem
-    
-    .app-view
-      display none
-    
-    .app-view.active
-      display block
-    
-    .dashboard-grid
-      display grid
-      grid-template-columns repeat(auto-fit, minmax(200px, 1fr))
-      gap 1rem
-      margin-top 1rem
-    
-    .stats-card
-      background var(--bg-card)
-      padding 1.5rem
-      border-radius 8px
-      box-shadow 0 2px 4px rgba(42,42,42,0.1)
-      border 1px solid var(--border-color)
-    
-    .stat-number
-      font-size 2rem
-      font-weight bold
-      color var(--accent-primary)
 </style>
+
