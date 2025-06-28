@@ -1,18 +1,37 @@
 ---
 import AppLayout from '../layouts/AppLayout.astro';
-import Header from '../components/Header.astro';
-import Navigation from '../components/Navigation.astro';
 import DataGrid from '../features/DataGrid.astro';
 import FilterPanel from '../features/FilterPanel.astro';
 import ExportTools from '../features/ExportTools.astro';
 ---
 
 <AppLayout title="Sistema FrontDesk - Gestión de Facturas">
+  <!-- Header del Sistema -->
+  <header class="app-header">
+    <h1>📋 Sistema FrontDesk - Gestión de Facturas</h1>
+    <div class="user-info">
+      👤 Usuario: Admin | 🕒 Última sesión: Hoy 14:30
+    </div>
+  </header>
 
-<Header />
-
-
-<Navigation />
+  <!-- Navegación Principal -->
+  <nav class="app-navigation">
+    <button class="nav-btn active" data-view="dashboard">
+      📊 Resumen
+    </button>
+    <button class="nav-btn" data-view="invoices">
+      🧾 Facturas
+    </button>
+    <button class="nav-btn" data-view="suppliers">
+      🏢 Proveedores
+    </button>
+    <button class="nav-btn" data-view="export">
+      📤 Exportar
+    </button>
+    <button class="nav-btn" data-view="settings">
+      ⚙️ Configuración
+    </button>
+  </nav>
 
   <!-- Contenido Principal -->
   <main class="app-main">
@@ -317,7 +336,25 @@ import ExportTools from '../features/ExportTools.astro';
 </AppLayout>
 
   <style lang="stylus">
-
+    .app-navigation
+      display flex
+      gap 1rem
+      padding 1rem
+      background var(--bg-secondary)
+      border-bottom 1px solid var(--border-color)
+    
+    .nav-btn
+      padding 0.5rem 1rem
+      border none
+      background var(--bg-card)
+      border-radius 4px
+      cursor pointer
+      transition all 0.2s
+      color var(--text-secondary)
+    
+    .nav-btn.active
+      background var(--accent-primary)
+      color var(--bg-primary)
     
     .app-main
       padding 2rem
