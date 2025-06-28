@@ -1,0 +1,374 @@
+---
+// Lógica del componente si es necesaria
+---
+
+<div class="invoices-container">
+  <h1>🧾 Gestión de Facturas</h1>
+  
+  <!-- Toolbar de Acciones -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <input type="text" class="search-box" placeholder="🔍 Buscar por proveedor, monto, etc...">
+      <select class="form-control">
+        <option>Todos los estados</option>
+        <option>Pendientes</option>
+        <option>Pagadas</option>
+        <option>Vencidas</option>
+      </select>
+    </div>
+    <div class="toolbar-right">
+      <button class="btn btn-success" id="new-invoice-btn">➕ Nueva Factura</button>
+      <button class="btn btn-primary">📤 Exportar</button>
+    </div>
+  </div>
+  
+  <!-- Formulario de Nueva Factura -->
+  <div class="form-section" id="invoice-form" style="display: none;">
+    <h2>➕ Registrar Nueva Factura</h2>
+    <form class="invoice-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="supplier">🏢 Proveedor *</label>
+          <select id="supplier" required>
+            <option value="">Seleccionar proveedor...</option>
+            <option>Constructora ABC S.A.</option>
+            <option>Suministros Municipales Ltda.</option>
+            <option>Servicios Generales SRL</option>
+            <option>Materiales de Construcción SA</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="invoice-date">📅 Fecha de Emisión *</label>
+          <input type="date" id="invoice-date" required>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="amount">💰 Monto *</label>
+          <input type="number" id="amount" placeholder="0.00" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label for="invoice-number">📄 Número de Factura</label>
+          <input type="text" id="invoice-number" placeholder="Ej: FAC-2024-001">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="department">🏛️ Sección Municipal *</label>
+          <select id="department" required>
+            <option value="">Seleccionar sección...</option>
+            <option>Obras Públicas</option>
+            <option>Servicios Generales</option>
+            <option>Mantenimiento</option>
+            <option>Administración</option>
+            <option>Recursos Humanos</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="bank-account">🏦 Cuenta Bancaria *</label>
+          <select id="bank-account" required>
+            <option value="">Seleccionar cuenta...</option>
+            <option>Cuenta Corriente - Banco Municipal (****1234)</option>
+            <option>Cuenta de Inversión - Banco Central (****5678)</option>
+            <option>Cuenta Especial - Banco Provincial (****9012)</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="payment-status">💳 Estado de Pago</label>
+          <select id="payment-status">
+            <option>Pendiente</option>
+            <option>Pagada</option>
+            <option>Vencida</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="authorized">✅ Factura Autorizada</label>
+          <select id="authorized">
+            <option>Pendiente de autorización</option>
+            <option>Autorizada</option>
+            <option>Rechazada</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-row full-width">
+        <div class="form-group">
+          <label for="description">📝 Descripción/Observaciones</label>
+          <textarea id="description" rows="3" placeholder="Detalles adicionales sobre la factura..."></textarea>
+        </div>
+      </div>
+      
+      <div style="margin-top: 1.5rem;">
+        <button type="submit" class="btn btn-primary">💾 Guardar Factura</button>
+        <button type="reset" class="btn btn-secondary" style="margin-left: 1rem;">🔄 Limpiar</button>
+      </div>
+    </form>
+  </div>
+  
+  <!-- Tabla de Facturas Completa -->
+  <table class="invoice-table">
+    <thead>
+      <tr>
+        <th>📄 N° Factura</th>
+        <th>🏢 Proveedor</th>
+        <th>📅 Fecha</th>
+        <th>💰 Monto</th>
+        <th>🏛️ Sección</th>
+        <th>🏦 Cuenta</th>
+        <th>💳 Estado Pago</th>
+        <th>✅ Autorizada</th>
+        <th>⚡ Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>FAC-2024-001</td>
+        <td>Constructora ABC S.A.</td>
+        <td>2024-01-15</td>
+        <td>$45,000.00</td>
+        <td>Obras Públicas</td>
+        <td>****1234</td>
+        <td><span class="status-badge paid">Pagada</span></td>
+        <td>✅ Sí</td>
+        <td>
+          <button class="btn btn-sm">👁️ Ver</button>
+          <button class="btn btn-sm">✏️ Editar</button>
+        </td>
+      </tr>
+      <tr>
+        <td>FAC-2024-002</td>
+        <td>Suministros Municipales</td>
+        <td>2024-01-20</td>
+        <td>$12,500.00</td>
+        <td>Mantenimiento</td>
+        <td>****5678</td>
+        <td><span class="status-badge pending">Pendiente</span></td>
+        <td>⏳ Pendiente</td>
+        <td>
+          <button class="btn btn-sm">👁️ Ver</button>
+          <button class="btn btn-sm">✏️ Editar</button>
+        </td>
+      </tr>
+      <tr>
+        <td>FAC-2024-003</td>
+        <td>Servicios Generales SRL</td>
+        <td>2024-01-22</td>
+        <td>$8,750.00</td>
+        <td>Administración</td>
+        <td>****1234</td>
+        <td><span class="status-badge overdue">Vencida</span></td>
+        <td>✅ Sí</td>
+        <td>
+          <button class="btn btn-sm">👁️ Ver</button>
+          <button class="btn btn-sm">✏️ Editar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  // Lógica específica de la vista de facturas
+  document.addEventListener('DOMContentLoaded', () => {
+    const newInvoiceBtn = document.getElementById('new-invoice-btn');
+    const invoiceForm = document.getElementById('invoice-form');
+    
+    if (newInvoiceBtn && invoiceForm) {
+      newInvoiceBtn.addEventListener('click', () => {
+        invoiceForm.style.display = invoiceForm.style.display === 'none' ? 'block' : 'none';
+      });
+    }
+  });
+</script>
+
+<style lang="stylus">
+// Formulario de Factura - Estilo Profesional
+.form-section
+  background var(--bg-card)
+  padding 2rem
+  border-radius 8px
+  border 1px solid var(--border-color)
+  margin-bottom 2rem
+  
+  h2
+    color var(--text-primary)
+    font-size 1.2rem
+    margin-bottom 1.5rem
+    padding-bottom 0.5rem
+    border-bottom 1px solid var(--border-color)
+
+.form-row
+  display grid
+  grid-template-columns 1fr 1fr
+  gap 1.5rem
+  margin-bottom 1rem
+  
+  &.full-width
+    grid-template-columns 1fr
+
+.form-group
+  display flex
+  flex-direction column
+  
+label
+  color var(--text-secondary)
+  font-weight 500
+  margin-bottom 0.5rem
+  font-size 0.9rem
+
+input, select, textarea
+  padding 0.75rem
+  background var(--bg-primary)
+  border 1px solid var(--border-color)
+  border-radius 4px
+  color var(--text-primary)
+  font-size 0.9rem
+  transition all 0.2s ease
+  
+  &:focus
+    outline none
+    border-color var(--accent-primary)
+    box-shadow 0 0 0 2px rgba(107,155,209,0.2)
+    
+  &::placeholder
+    color var(--text-secondary)
+    opacity 0.7
+
+// Toolbar de Acciones
+.toolbar
+  display flex
+  justify-content space-between
+  align-items center
+  margin-bottom 1.5rem
+  padding 1rem
+  background var(--bg-card)
+  border-radius 8px
+  border 1px solid var(--border-color)
+  
+  .toolbar-left
+    display flex
+    gap 1rem
+    
+  .toolbar-right
+    display flex
+    gap 0.5rem
+
+// Filtros y Búsqueda
+.search-box
+  padding 0.5rem 1rem
+  background var(--bg-primary)
+  border 1px solid var(--border-color)
+  border-radius 4px
+  color var(--text-primary)
+  width 300px
+  
+  &::placeholder
+    color var(--text-secondary)
+
+// Tabla Principal - Estilo Excel Profesional
+.invoice-table
+  width 100%
+  background var(--bg-card)
+  border-radius 8px
+  overflow hidden
+  border 1px solid var(--border-color)
+  font-size 0.9rem
+  
+  th
+    background var(--bg-secondary)
+    color var(--text-secondary)
+    padding 1rem 0.75rem
+    text-align left
+    font-weight 600
+    font-size 0.8rem
+    text-transform uppercase
+    letter-spacing 0.5px
+    border-bottom 1px solid var(--border-color)
+    
+  td
+    padding 0.75rem
+    border-bottom 1px solid var(--border-color)
+    color var(--text-primary)
+    
+  tr:hover
+    background var(--table-hover)
+    
+  tr:last-child td
+    border-bottom none
+
+// Estados de Factura
+.status-badge
+  padding 0.25rem 0.75rem
+  border-radius 12px
+  font-size 0.75rem
+  font-weight 600
+  text-transform uppercase
+  display inline-block
+  
+  &.paid
+    background rgba(107,155,107,0.2)
+    color var(--success-color)
+    border 1px solid var(--success-color)
+    
+  &.pending
+    background rgba(209,166,107,0.2)
+    color var(--warning-color)
+    border 1px solid var(--warning-color)
+    
+  &.overdue
+    background rgba(209,122,122,0.2)
+    color var(--error-color)
+    border 1px solid var(--error-color)
+
+// Botones del Sistema
+.btn
+  padding 0.75rem 1.5rem
+  border none
+  border-radius 4px
+  cursor pointer
+  font-weight 500
+  font-size 0.9rem
+  transition all 0.2s ease
+  text-decoration none
+  display inline-flex
+  align-items center
+  gap 0.5rem
+  
+  &.btn-primary
+    background var(--accent-primary)
+    color white
+    
+    &:hover
+      background var(--accent-hover)
+      
+  &.btn-success
+    background var(--success-color)
+    color white
+    
+  &.btn-secondary
+    background var(--text-secondary)
+    color white
+    
+  &.btn-sm
+    padding 0.5rem 1rem
+    font-size 0.8rem
+
+// Responsive
+@media (max-width: 1200px)
+  .form-row
+    grid-template-columns 1fr
+    
+@media (max-width: 768px)
+  .toolbar
+    flex-direction column
+    gap 1rem
+    
+    .toolbar-left, .toolbar-right
+      width 100%
+      justify-content center
+</style>

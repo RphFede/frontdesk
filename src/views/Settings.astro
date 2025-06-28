@@ -1,0 +1,229 @@
+---
+// Lógica del componente si es necesaria
+---
+
+<div class="settings-container">
+  <h1>⚙️ Configuración del Sistema</h1>
+  
+  <div class="settings-grid">
+    <!-- Configuración de Usuario -->
+    <div class="settings-card">
+      <h3>👤 Configuración de Usuario</h3>
+      <form class="settings-form">
+        <div class="form-group">
+          <label for="username">Nombre de Usuario</label>
+          <input type="text" id="username" value="Admin" readonly>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" value="admin@frontdesk.com">
+        </div>
+        <div class="form-group">
+          <label for="theme">Tema de la Aplicación</label>
+          <select id="theme">
+            <option value="dark" selected>Oscuro</option>
+            <option value="light">Claro</option>
+            <option value="auto">Automático</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">💾 Guardar Cambios</button>
+      </form>
+    </div>
+    
+    <!-- Configuración del Sistema -->
+    <div class="settings-card">
+      <h3>🔧 Configuración del Sistema</h3>
+      <form class="settings-form">
+        <div class="form-group">
+          <label for="company-name">Nombre de la Empresa</label>
+          <input type="text" id="company-name" value="Municipalidad FrontDesk">
+        </div>
+        <div class="form-group">
+          <label for="currency">Moneda</label>
+          <select id="currency">
+            <option value="CLP" selected>Peso Chileno (CLP)</option>
+            <option value="USD">Dólar Americano (USD)</option>
+            <option value="EUR">Euro (EUR)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="date-format">Formato de Fecha</label>
+          <select id="date-format">
+            <option value="DD/MM/YYYY" selected>DD/MM/YYYY</option>
+            <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+            <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">💾 Guardar Configuración</button>
+      </form>
+    </div>
+    
+    <!-- Backup y Mantenimiento -->
+    <div class="settings-card">
+      <h3>🗄️ Backup y Mantenimiento</h3>
+      <div class="maintenance-actions">
+        <div class="action-item">
+          <h4>Backup de Base de Datos</h4>
+          <p>Crear una copia de seguridad de todos los datos</p>
+          <button class="btn btn-success">📦 Crear Backup</button>
+        </div>
+        <div class="action-item">
+          <h4>Limpiar Cache</h4>
+          <p>Eliminar archivos temporales y cache del sistema</p>
+          <button class="btn btn-warning">🧹 Limpiar Cache</button>
+        </div>
+        <div class="action-item">
+          <h4>Exportar Configuración</h4>
+          <p>Descargar archivo de configuración actual</p>
+          <button class="btn btn-primary">📤 Exportar Config</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Información del Sistema -->
+    <div class="settings-card">
+      <h3>ℹ️ Información del Sistema</h3>
+      <div class="system-info">
+        <div class="info-item">
+          <span class="info-label">Versión:</span>
+          <span class="info-value">FrontDesk v1.0.0</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Base de Datos:</span>
+          <span class="info-value">SQLite 3.39.0</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Última Actualización:</span>
+          <span class="info-value">2024-01-25 14:30</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Usuarios Activos:</span>
+          <span class="info-value">5</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style lang="stylus">
+.settings-container
+  h1
+    color var(--text-primary)
+    margin-bottom 2rem
+
+.settings-grid
+  display grid
+  grid-template-columns repeat(auto-fit, minmax(400px, 1fr))
+  gap 1.5rem
+
+.settings-card
+  background var(--bg-card)
+  padding 2rem
+  border-radius 8px
+  border 1px solid var(--border-color)
+  
+  h3
+    color var(--accent-primary)
+    font-size 1.1rem
+    margin-bottom 1.5rem
+    padding-bottom 0.5rem
+    border-bottom 1px solid var(--border-color)
+
+.settings-form
+  .form-group
+    margin-bottom 1rem
+    
+  label
+    color var(--text-secondary)
+    font-weight 500
+    margin-bottom 0.5rem
+    font-size 0.9rem
+    display block
+    
+  input, select
+    width 100%
+    padding 0.75rem
+    background var(--bg-primary)
+    border 1px solid var(--border-color)
+    border-radius 4px
+    color var(--text-primary)
+    font-size 0.9rem
+    transition all 0.2s ease
+    
+    &:focus
+      outline none
+      border-color var(--accent-primary)
+      box-shadow 0 0 0 2px rgba(107,155,209,0.2)
+
+.maintenance-actions
+  .action-item
+    margin-bottom 1.5rem
+    padding-bottom 1rem
+    border-bottom 1px solid var(--border-color)
+    
+    &:last-child
+      border-bottom none
+      margin-bottom 0
+    
+    h4
+      color var(--text-primary)
+      font-size 0.95rem
+      margin-bottom 0.25rem
+    
+    p
+      color var(--text-secondary)
+      font-size 0.85rem
+      margin-bottom 0.75rem
+
+.system-info
+  .info-item
+    display flex
+    justify-content space-between
+    align-items center
+    padding 0.75rem 0
+    border-bottom 1px solid var(--border-color)
+    
+    &:last-child
+      border-bottom none
+    
+    .info-label
+      color var(--text-secondary)
+      font-weight 500
+      font-size 0.9rem
+    
+    .info-value
+      color var(--text-primary)
+      font-size 0.9rem
+
+.btn
+  padding 0.75rem 1.5rem
+  border none
+  border-radius 4px
+  cursor pointer
+  font-weight 500
+  font-size 0.9rem
+  transition all 0.2s ease
+  text-decoration none
+  display inline-flex
+  align-items center
+  gap 0.5rem
+  
+  &.btn-primary
+    background var(--accent-primary)
+    color white
+    
+    &:hover
+      background var(--accent-hover)
+      
+  &.btn-success
+    background var(--success-color)
+    color white
+    
+  &.btn-warning
+    background var(--warning-color)
+    color white
+
+@media (max-width: 768px)
+  .settings-grid
+    grid-template-columns 1fr
+</style>

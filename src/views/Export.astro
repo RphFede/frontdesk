@@ -1,0 +1,110 @@
+---
+import ExportTools from '../features/ExportTools.astro';
+
+---
+
+<div class="export-container">
+  <h1>📤 Exportar Datos</h1>
+  
+  <div class="export-options">
+    <div class="export-card">
+      <h3>📊 Exportar Facturas</h3>
+      <p>Exporta todas las facturas en diferentes formatos</p>
+      <div class="export-formats">
+        <button class="btn btn-primary">📄 Excel (.xlsx)</button>
+        <button class="btn btn-primary">📋 CSV</button>
+        <button class="btn btn-primary">📑 PDF</button>
+      </div>
+    </div>
+    
+    <div class="export-card">
+      <h3>🏢 Exportar Proveedores</h3>
+      <p>Exporta la lista completa de proveedores</p>
+      <div class="export-formats">
+        <button class="btn btn-primary">📄 Excel (.xlsx)</button>
+        <button class="btn btn-primary">📋 CSV</button>
+        <button class="btn btn-primary">📑 PDF</button>
+      </div>
+    </div>
+    
+    <div class="export-card">
+      <h3>📈 Reportes Personalizados</h3>
+      <p>Genera reportes con filtros específicos</p>
+      <div class="export-formats">
+        <button class="btn btn-success">⚙️ Configurar Reporte</button>
+      </div>
+    </div>
+  </div>
+  
+  <ExportTools />
+</div>
+
+<style lang="stylus">
+.export-container
+  h1
+    color var(--text-primary)
+    margin-bottom 2rem
+
+.export-options
+  display grid
+  grid-template-columns repeat(auto-fit, minmax(300px, 1fr))
+  gap 1.5rem
+  margin-bottom 2rem
+
+.export-card
+  background var(--bg-card)
+  padding 2rem
+  border-radius 8px
+  border 1px solid var(--border-color)
+  text-align center
+  transition all 0.3s ease
+  
+  &:hover
+    border-color var(--accent-primary)
+    transform translateY(-2px)
+    box-shadow 0 8px 16px rgba(42,42,42,0.3)
+  
+  h3
+    color var(--accent-primary)
+    font-size 1.1rem
+    margin-bottom 0.5rem
+  
+  p
+    color var(--text-secondary)
+    margin-bottom 1.5rem
+    font-size 0.9rem
+
+.export-formats
+  display flex
+  flex-direction column
+  gap 0.5rem
+
+.btn
+  padding 0.75rem 1.5rem
+  border none
+  border-radius 4px
+  cursor pointer
+  font-weight 500
+  font-size 0.9rem
+  transition all 0.2s ease
+  text-decoration none
+  display inline-flex
+  align-items center
+  justify-content center
+  gap 0.5rem
+  
+  &.btn-primary
+    background var(--accent-primary)
+    color white
+    
+    &:hover
+      background var(--accent-hover)
+      
+  &.btn-success
+    background var(--success-color)
+    color white
+
+@media (max-width: 768px)
+  .export-options
+    grid-template-columns 1fr
+</style>

@@ -1,10 +1,11 @@
 ---
 import AppLayout from '../layouts/AppLayout.astro';
 import Navigation from '../components/Navigation.astro';
-import Invoices from '../features/Invoices.astro';
-import DataGrid from '../features/DataGrid.astro';
-import FilterPanel from '../features/FilterPanel.astro';
-import ExportTools from '../features/ExportTools.astro';
+import Dashboard from '../views/Dashboard.astro';
+import Invoices from '../views/Invoices.astro';
+import Suppliers from '../views/Suppliers.astro';
+import Export from '../views/Export.astro';
+import Settings from '../views/Settings.astro';
 ---
 
 <AppLayout title="Sistema FrontDesk - Gestión de Facturas">
@@ -19,311 +20,155 @@ import ExportTools from '../features/ExportTools.astro';
   <!-- Navegación Principal -->
   <Navigation />
 
-  <!-- Contenido Principal -->
+  <!-- Contenido Principal - Solo contenedores de vistas -->
   <main class="app-main">
-    <!-- Vista Dashboard -->
-    <section id="dashboard-view" class="app-view active">
-      <h1>📊 Resumen General</h1>
-      
-      <div class="dashboard-grid">
-        <div class="stats-card">
-          <h3>Total Facturas</h3>
-          <span class="stat-number">1,247</span>
-          <span class="stat-date">Este mes</span>
-        </div>
-        <div class="stats-card">
-          <h3>Monto Total</h3>
-          <span class="stat-number">$2.4M</span>
-          <span class="stat-date">Año 2024</span>
-        </div>
-        <div class="stats-card">
-          <h3>Pendientes</h3>
-          <span class="stat-number">23</span>
-          <span class="stat-date">Por autorizar</span>
-        </div>
-        <div class="stats-card">
-          <h3>Proveedores</h3>
-          <span class="stat-number">156</span>
-          <span class="stat-date">Activos</span>
-        </div>
-      </div>
-      
-      <!-- Últimas Facturas -->
-      <div class="recent-section">
-        <h2>🕒 Últimas Facturas Ingresadas</h2>
-        <table class="invoice-table">
-          <thead>
-            <tr>
-              <th>Fecha</th>
-              <th>Proveedor</th>
-              <th>Monto</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>2024-01-25</td>
-              <td>Constructora ABC S.A.</td>
-              <td>$45,000</td>
-              <td><span class="status-badge pending">Pendiente</span></td>
-              <td><button class="btn btn-sm btn-primary">Ver</button></td>
-            </tr>
-            <tr>
-              <td>2024-01-24</td>
-              <td>Suministros Municipales</td>
-              <td>$12,500</td>
-              <td><span class="status-badge paid">Pagada</span></td>
-              <td><button class="btn btn-sm btn-primary">Ver</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- Vista Facturas -->
-    <section id="invoices-view" class="app-view">
-      <h1>🧾 Gestión de Facturas</h1>
-      
-      <!-- Toolbar de Acciones -->
-      <div class="toolbar">
-        <div class="toolbar-left">
-          <input type="text" class="search-box" placeholder="🔍 Buscar por proveedor, monto, etc...">
-          <select class="form-control">
-            <option>Todos los estados</option>
-            <option>Pendientes</option>
-            <option>Pagadas</option>
-            <option>Vencidas</option>
-          </select>
-        </div>
-        <div class="toolbar-right">
-          <button class="btn btn-success">➕ Nueva Factura</button>
-          <button class="btn btn-primary">📤 Exportar</button>
-        </div>
-      </div>
-      
-      <!-- Formulario de Nueva Factura -->
-      <div class="form-section">
-        <h2>➕ Registrar Nueva Factura</h2>
-        <form class="invoice-form">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="supplier">🏢 Proveedor *</label>
-              <select id="supplier" required>
-                <option value="">Seleccionar proveedor...</option>
-                <option>Constructora ABC S.A.</option>
-                <option>Suministros Municipales Ltda.</option>
-                <option>Servicios Generales SRL</option>
-                <option>Materiales de Construcción SA</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="invoice-date">📅 Fecha de Emisión *</label>
-              <input type="date" id="invoice-date" required>
-            </div>
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label for="amount">💰 Monto *</label>
-              <input type="number" id="amount" placeholder="0.00" step="0.01" required>
-            </div>
-            <div class="form-group">
-              <label for="invoice-number">📄 Número de Factura</label>
-              <input type="text" id="invoice-number" placeholder="Ej: FAC-2024-001">
-            </div>
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label for="department">🏛️ Sección Municipal *</label>
-              <select id="department" required>
-                <option value="">Seleccionar sección...</option>
-                <option>Obras Públicas</option>
-                <option>Servicios Generales</option>
-                <option>Mantenimiento</option>
-                <option>Administración</option>
-                <option>Recursos Humanos</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="bank-account">🏦 Cuenta Bancaria *</label>
-              <select id="bank-account" required>
-                <option value="">Seleccionar cuenta...</option>
-                <option>Cuenta Corriente - Banco Municipal (****1234)</option>
-                <option>Cuenta de Inversión - Banco Central (****5678)</option>
-                <option>Cuenta Especial - Banco Provincial (****9012)</option>
-              </select>
-            </div>
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label for="payment-status">💳 Estado de Pago</label>
-              <select id="payment-status">
-                <option>Pendiente</option>
-                <option>Pagada</option>
-                <option>Vencida</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="authorized">✅ Factura Autorizada</label>
-              <select id="authorized">
-                <option>Pendiente de autorización</option>
-                <option>Autorizada</option>
-                <option>Rechazada</option>
-              </select>
-            </div>
-          </div>
-          
-          <div class="form-row full-width">
-            <div class="form-group">
-              <label for="description">📝 Descripción/Observaciones</label>
-              <textarea id="description" rows="3" placeholder="Detalles adicionales sobre la factura..."></textarea>
-            </div>
-          </div>
-          
-          <div style="margin-top: 1.5rem;">
-            <button type="submit" class="btn btn-primary">💾 Guardar Factura</button>
-            <button type="reset" class="btn btn-secondary" style="margin-left: 1rem;">🔄 Limpiar</button>
-          </div>
-        </form>
-      </div>
-      
-      <!-- Tabla de Facturas Completa -->
-      <table class="invoice-table">
-        <thead>
-          <tr>
-            <th>📄 N° Factura</th>
-            <th>🏢 Proveedor</th>
-            <th>📅 Fecha</th>
-            <th>💰 Monto</th>
-            <th>🏛️ Sección</th>
-            <th>🏦 Cuenta</th>
-            <th>💳 Estado Pago</th>
-            <th>✅ Autorizada</th>
-            <th>⚡ Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>FAC-2024-001</td>
-            <td>Constructora ABC S.A.</td>
-            <td>2024-01-15</td>
-            <td>$45,000.00</td>
-            <td>Obras Públicas</td>
-            <td>****1234</td>
-            <td><span class="status-badge paid">Pagada</span></td>
-            <td>✅ Sí</td>
-            <td>
-              <button class="btn btn-sm">👁️ Ver</button>
-              <button class="btn btn-sm">✏️ Editar</button>
-            </td>
-          </tr>
-          <tr>
-            <td>FAC-2024-002</td>
-            <td>Suministros Municipales</td>
-            <td>2024-01-20</td>
-            <td>$12,500.00</td>
-            <td>Mantenimiento</td>
-            <td>****5678</td>
-            <td><span class="status-badge pending">Pendiente</span></td>
-            <td>⏳ Pendiente</td>
-            <td>
-              <button class="btn btn-sm">👁️ Ver</button>
-              <button class="btn btn-sm">✏️ Editar</button>
-            </td>
-          </tr>
-          <tr>
-            <td>FAC-2024-003</td>
-            <td>Servicios Generales SRL</td>
-            <td>2024-01-22</td>
-            <td>$8,750.00</td>
-            <td>Administración</td>
-            <td>****1234</td>
-            <td><span class="status-badge overdue">Vencida</span></td>
-            <td>✅ Sí</td>
-            <td>
-              <button class="btn btn-sm">👁️ Ver</button>
-              <button class="btn btn-sm">✏️ Editar</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
-    <!-- Vista Proveedores -->
-    <section id="suppliers-view" class="app-view">
-      <h1>🏢 Gestión de Proveedores</h1>
-      <p>Registro y gestión de proveedores municipales</p>
-    </section>
-
-    <!-- Vista Reportes -->
-    <section id="reports-view" class="app-view">
-      <h1>📈 Reportes y Análisis</h1>
-      <FilterPanel />
-    </section>
-
-    <!-- Vista Exportar -->
-    <section id="export-view" class="app-view">
-      <h1>📤 Exportar Datos</h1>
-      <ExportTools />
-    </section>
-
-    <!-- Vista Configuración -->
-    <section id="settings-view" class="app-view">
-      <h1>⚙️ Configuración del Sistema</h1>
-      <p>Configuraciones de usuarios y sistema</p>
-    </section>
+    <div id="dashboard-view" class="app-view active">
+      <Dashboard />
+    </div>
+    
+    <div id="invoices-view" class="app-view">
+      <Invoices />
+    </div>
+    
+    <div id="suppliers-view" class="app-view">
+      <Suppliers />
+    </div>
+    
+    <div id="export-view" class="app-view">
+      <Export />
+    </div>
+    
+    <div id="settings-view" class="app-view">
+      <Settings />
+    </div>
   </main>
 
   <script>
-    // Navegación SPA optimizada para escritorio
-    document.addEventListener('DOMContentLoaded', () => {
-      const navButtons = document.querySelectorAll('.nav-btn');
-      const views = document.querySelectorAll('.app-view');
+    // Navegación SPA mejorada
+    class SPANavigator {
+      constructor() {
+        this.currentView = 'dashboard';
+        this.views = new Map();
+        this.initViews();
+        this.initNavigation();
+      }
 
-      navButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          const targetView = (button as HTMLElement).dataset.view;
-          
-          // Actualizar navegación activa
-          navButtons.forEach(btn => btn.classList.remove('active'));
-          button.classList.add('active');
-          
-          // Cambiar vista con animación
-          views.forEach(view => view.classList.remove('active'));
-          const targetElement = document.getElementById(`${targetView}-view`);
-          if (targetElement) {
-            targetElement.classList.add('active');
-          }
+      initViews() {
+        // Registrar todas las vistas disponibles
+        const viewElements = document.querySelectorAll('.app-view');
+        viewElements.forEach(view => {
+          const viewId = view.id.replace('-view', '');
+          this.views.set(viewId, view);
         });
-      });
-      
-      // Funcionalidad de búsqueda en tiempo real
-      const searchBox = document.querySelector('.search-box');
-      if (searchBox) {
-        searchBox.addEventListener('input', (e) => {
-          const searchTerm = (e.target as HTMLInputElement).value.toLowerCase();
-          const tableRows = document.querySelectorAll('.invoice-table tbody tr');
-          
-          tableRows.forEach(row => {
-            const text = row.textContent?.toLowerCase() || '';
-            if (text.includes(searchTerm)) {
-              (row as HTMLElement).style.display = '';
-            } else {
-              (row as HTMLElement).style.display = 'none';
-            }
+      }
+
+      initNavigation() {
+        const navButtons = document.querySelectorAll('.nav-btn');
+        
+        navButtons.forEach(button => {
+          button.addEventListener('click', (e) => {
+            const targetView = e.target.dataset.view;
+            this.navigateTo(targetView);
           });
         });
       }
+
+      navigateTo(viewName) {
+        // Validar que la vista existe
+        if (!this.views.has(viewName)) {
+          console.error(`Vista '${viewName}' no encontrada`);
+          return;
+        }
+
+        // Ocultar vista actual
+        if (this.views.has(this.currentView)) {
+          this.views.get(this.currentView).classList.remove('active');
+        }
+
+        // Mostrar nueva vista
+        this.views.get(viewName).classList.add('active');
+        
+        // Actualizar navegación
+        this.updateActiveNav(viewName);
+        
+        // Actualizar estado
+        this.currentView = viewName;
+        
+        // Ejecutar lógica específica de la vista
+        this.onViewChange(viewName);
+      }
+
+      updateActiveNav(activeView) {
+        const navButtons = document.querySelectorAll('.nav-btn');
+        navButtons.forEach(btn => {
+          btn.classList.remove('active');
+          if (btn.dataset.view === activeView) {
+            btn.classList.add('active');
+          }
+        });
+      }
+
+      onViewChange(viewName) {
+        // Lógica específica cuando cambia la vista
+        switch(viewName) {
+          case 'invoices':
+            this.initInvoicesFeatures();
+            break;
+          case 'suppliers':
+            this.initSuppliersFeatures();
+            break;
+          // ... otros casos
+        }
+      }
+
+      initInvoicesFeatures() {
+        // Funcionalidad específica de facturas
+        const searchBox = document.querySelector('#invoices-view .search-box');
+        if (searchBox && !searchBox.hasAttribute('data-initialized')) {
+          searchBox.addEventListener('input', (e) => {
+            this.filterInvoices(e.target.value);
+          });
+          searchBox.setAttribute('data-initialized', 'true');
+        }
+      }
+
+      filterInvoices(searchTerm) {
+        const tableRows = document.querySelectorAll('#invoices-view .invoice-table tbody tr');
+        tableRows.forEach(row => {
+          const text = row.textContent?.toLowerCase() || '';
+          row.style.display = text.includes(searchTerm.toLowerCase()) ? '' : 'none';
+        });
+      }
+    }
+
+    // Inicializar SPA cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', () => {
+      window.spaNavigator = new SPANavigator();
     });
   </script>
-</AppLayout>
 
   <style lang="stylus">
+    .app-main
+      padding 2rem
     
+    .app-view
+      display none
+      
+    .app-view.active
+      display block
+      animation fadeIn 0.3s ease-in-out
     
+    @keyframes fadeIn
+      from
+        opacity 0
+        transform translateY(10px)
+      to
+        opacity 1
+        transform translateY(0)
+  </style>
+</AppLayout>
+
+<style lang="stylus">    
     .app-main
       padding 2rem
     
@@ -350,5 +195,4 @@ import ExportTools from '../features/ExportTools.astro';
       font-size 2rem
       font-weight bold
       color var(--accent-primary)
-  </style>
-</AppLayout>
+</style>
