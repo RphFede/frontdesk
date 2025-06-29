@@ -1,4 +1,4 @@
-// Variables globales del sistema
+// Variables CSS
 :root
   --bg-primary #2a2a2a
   --bg-secondary #3a3a3a
@@ -13,11 +13,18 @@
   --error-color #d17a7a
   --table-hover #404040
 
-// Reset y Base para Aplicación de Escritorio
+// Reset básico
 *
   margin 0
   padding 0
   box-sizing border-box
+
+html, body
+  margin 0
+  padding 0
+  width 100%
+  height 100%
+  overflow hidden
 
 body
   background var(--bg-primary)
@@ -25,56 +32,63 @@ body
   font-family 'Segoe UI', system-ui, sans-serif
   font-size 14px
   line-height 1.5
-  overflow-x hidden
 
-// Header Principal del Sistema
-.app-header
-  background var(--bg-secondary)
-  padding 1rem 2rem
-  border-bottom 2px solid var(--border-color)
-  display flex
-  justify-content space-between
-  align-items center
+// Elementos base
+h1, h2, h3
+  color var(--text-primary)
+  margin-bottom 1rem
+
+h1
+  font-size 1.5rem
+  font-weight 600
+
+h2
+  font-size 1.3rem
+  font-weight 500
+
+h3
+  font-size 1.1rem
+  font-weight 500
+
+table
+  width 100%
+  border-collapse collapse
+  background var(--bg-card)
+  border-radius 8px
+  overflow hidden
   
-  h1
-    color var(--accent-primary)
-    font-size 1.5rem
+  th, td
+    padding 0.75rem
+    text-align left
+    border-bottom 1px solid var(--border-color)
+  
+  th
+    background var(--bg-secondary)
     font-weight 600
-    margin 0
-    
-  .user-info
-    color var(--text-secondary)
-    font-size 0.9rem
+    color var(--text-primary)
+  
+  tr:hover
+    background var(--table-hover)
 
-// Navegación Horizontal Optimizada
-.app-navigation
-  display flex
-  background var(--bg-secondary)
-  padding 0 2rem
-  border-bottom 1px solid var(--border-color)
-  overflow-x auto
-
-.nav-btn
-  padding 1rem 1.5rem
+button
   border none
-  background transparent
-  color var(--text-secondary)
   cursor pointer
   transition all 0.2s ease
-  border-bottom 3px solid transparent
-  white-space nowrap
-  font-weight 500
-  
-  &:hover
-    background rgba(208,208,208,0.05)
-    color var(--text-primary)
-    
-  &.active
-    color var(--accent-primary)
-    border-bottom-color var(--accent-primary)
-    background rgba(107,155,209,0.1)
+  font-family inherit
 
-// Scrollbars personalizados
+input, select
+  background var(--bg-card)
+  border 1px solid var(--border-color)
+  color var(--text-primary)
+  padding 0.5rem
+  border-radius 4px
+  font-family inherit
+  
+  &:focus
+    outline none
+    border-color var(--accent-primary)
+
+// Scrollbars
 ::-webkit-scrollbar
   width 8px
   height 8px

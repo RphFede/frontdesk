@@ -9,162 +9,232 @@ import Settings from '../views/Settings.astro';
 ---
 
 <AppLayout title="Sistema FrontDesk - Gestión de Facturas">
-  <!-- Header del Sistema -->
-  <header class="app-header">
-    <h1>📋 Sistema FrontDesk - Gestión de Facturas</h1>
-    <div class="user-info">
-      👤 Usuario: Admin | 🕒 Última sesión: Hoy 14:30
+  <aside>
+    <div class="sidebar-header">
+      <h2>📋 FrontDesk</h2>
     </div>
-  </header>
+    <Navigation />
+  </aside>
 
-  <!-- Navegación Principal -->
-  <Navigation />
+  <div class="main-content">
+    <header>
+      <h1>Sistema de Gestión de Facturas</h1>
+      <div class="user-info">
+        👤 Usuario: Admin | 🕒 Última sesión: Hoy 14:30
+      </div>
+    </header>
 
-  <!-- Contenido Principal - Solo contenedores de vistas -->
-  <main class="app-main">
-    <div id="dashboard-view" class="app-view active">
-      <Dashboard />
-    </div>
-    
-    <div id="invoices-view" class="app-view">
-      <Invoices />
-    </div>
-    
-    <div id="suppliers-view" class="app-view">
-      <Suppliers />
-    </div>
-    
-    <div id="export-view" class="app-view">
-      <Export />
-    </div>
-    
-    <div id="settings-view" class="app-view">
-      <Settings />
-    </div>
-  </main>
+    <main>
+      <section id="dashboard-view" class="view active">
+        <Dashboard />
+      </section>
+      
+      <section id="invoices-view" class="view">
+        <Invoices />
+      </section>
+      
+      <section id="suppliers-view" class="view">
+        <Suppliers />
+      </section>
+      
+      <section id="export-view" class="view">
+        <Export />
+      </section>
+      
+      <section id="settings-view" class="view">
+        <Settings />
+      </section>
+    </main>
+  </div>
 </AppLayout>
 
-  <script>
-    // Navegación SPA mejorada
-    class SPANavigator {
-      constructor() {
-        this.currentView = 'dashboard';
-        this.views = new Map();
-        this.initViews();
-        this.initNavigation();
-      }
+<script>
+  class SPANavigator {
+    constructor() {
+      this.currentView = 'dashboard';
+      this.views = new Map();
+      this.initViews();
+      this.initNavigation();
+    }
 
-      initViews() {
-        // Registrar todas las vistas disponibles
-        const viewElements = document.querySelectorAll('.app-view');
-        viewElements.forEach(view => {
-          const viewId = view.id.replace('-view', '');
-          this.views.set(viewId, view);
-        });
-      }
+    initViews() {
+      const viewElements = document.querySelectorAll('.view');
+      viewElements.forEach(view => {
+        const viewId = view.id.replace('-view', '');
+        this.views.set(viewId, view);
+      });
+    }
 
-      initNavigation() {
-        const navButtons = document.querySelectorAll('.nav-btn');
-        
-        navButtons.forEach(button => {
-          button.addEventListener('click', (e) => {
-            const targetView = e.target.dataset.view;
+    initNavigation() {
+      const navButtons = document.querySelectorAll('nav button');
+      
+      navButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          const targetView = e.target.dataset.target;
+          if (targetView) {
             this.navigateTo(targetView);
-          });
-        });
-      }
-
-      navigateTo(viewName) {
-        // Validar que la vista existe
-        if (!this.views.has(viewName)) {
-          console.error(`Vista '${viewName}' no encontrada`);
-          return;
-        }
-
-        // Ocultar vista actual
-        if (this.views.has(this.currentView)) {
-          this.views.get(this.currentView).classList.remove('active');
-        }
-
-        // Mostrar nueva vista
-        this.views.get(viewName).classList.add('active');
-        
-        // Actualizar navegación
-        this.updateActiveNav(viewName);
-        
-        // Actualizar estado
-        this.currentView = viewName;
-        
-        // Ejecutar lógica específica de la vista
-        this.onViewChange(viewName);
-      }
-
-      updateActiveNav(activeView) {
-        const navButtons = document.querySelectorAll('.nav-btn');
-        navButtons.forEach(btn => {
-          btn.classList.remove('active');
-          if (btn.dataset.view === activeView) {
-            btn.classList.add('active');
           }
         });
+      });
+    }
+
+    navigateTo(viewName) {
+      if (!this.views.has(viewName)) {
+        console.error(`Vista '${viewName}' no encontrada`);
+        return;
       }
 
-      onViewChange(viewName) {
-        // Lógica específica cuando cambia la vista
-        switch(viewName) {
-          case 'invoices':
-            this.initInvoicesFeatures();
-            break;
-          case 'suppliers':
-            this.initSuppliersFeatures();
-            break;
-          // ... otros casos
+      // Ocultar vista actual
+      if (this.views.has(this.currentView)) {
+        this.views.get(this.currentView).classList.remove('active');
+      }
+
+      // Mostrar nueva vista
+      this.views.get(viewName).classList.add('active');
+      this.updateActiveNav(viewName);
+      this.currentView = viewName;
+      this.onViewChange(viewName);
+    }
+
+    updateActiveNav(activeView) {
+      const navButtons = document.querySelectorAll('nav button');
+      navButtons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.target === activeView) {
+          btn.classList.add('active');
         }
-      }
+      });
+    }
 
-      initInvoicesFeatures() {
-        // Funcionalidad específica de facturas
-        const searchBox = document.querySelector('#invoices-view .search-box');
-        if (searchBox && !searchBox.hasAttribute('data-initialized')) {
-          searchBox.addEventListener('input', (e) => {
-            this.filterInvoices(e.target.value);
-          });
-          searchBox.setAttribute('data-initialized', 'true');
-        }
-      }
-
-      filterInvoices(searchTerm) {
-        const tableRows = document.querySelectorAll('#invoices-view .invoice-table tbody tr');
-        tableRows.forEach(row => {
-          const text = row.textContent?.toLowerCase() || '';
-          row.style.display = text.includes(searchTerm.toLowerCase()) ? '' : 'none';
-        });
+    onViewChange(viewName) {
+      switch(viewName) {
+        case 'invoices':
+          this.initInvoicesFeatures();
+          break;
+        case 'suppliers':
+          this.initSuppliersFeatures();
+          break;
+        case 'export':
+          this.initExportFeatures();
+          break;
+        case 'settings':
+          this.initSettingsFeatures();
+          break;
       }
     }
 
-    // Inicializar SPA cuando el DOM esté listo
-    document.addEventListener('DOMContentLoaded', () => {
-      window.spaNavigator = new SPANavigator();
-    });
-  </script>
+    initInvoicesFeatures() {
+      const searchBox = document.querySelector('#invoices-view input[type="text"]');
+      if (searchBox && !searchBox.hasAttribute('data-initialized')) {
+        searchBox.addEventListener('input', (e) => {
+          this.filterInvoices(e.target.value);
+        });
+        searchBox.setAttribute('data-initialized', 'true');
+      }
+    }
 
-  <style lang="stylus">
-    .app-main
-      padding 2rem
+    initSuppliersFeatures() {
+      const searchBox = document.querySelector('#suppliers-view input[type="text"]');
+      if (searchBox && !searchBox.hasAttribute('data-initialized')) {
+        searchBox.addEventListener('input', (e) => {
+          this.filterSuppliers(e.target.value);
+        });
+        searchBox.setAttribute('data-initialized', 'true');
+      }
+    }
+
+    initExportFeatures() {
+      // Inicializar funcionalidades de exportación
+      console.log('Funcionalidades de exportación inicializadas');
+    }
+
+    initSettingsFeatures() {
+      // Inicializar funcionalidades de configuración
+      console.log('Funcionalidades de configuración inicializadas');
+    }
+
+    filterInvoices(searchTerm) {
+      const tableRows = document.querySelectorAll('#invoices-view table tbody tr');
+      tableRows.forEach(row => {
+        const text = row.textContent?.toLowerCase() || '';
+        row.style.display = text.includes(searchTerm.toLowerCase()) ? '' : 'none';
+      });
+    }
+
+    filterSuppliers(searchTerm) {
+      const tableRows = document.querySelectorAll('#suppliers-view table tbody tr');
+      tableRows.forEach(row => {
+        const text = row.textContent?.toLowerCase() || '';
+        row.style.display = text.includes(searchTerm.toLowerCase()) ? '' : 'none';
+      });
+    }
+  }
+
+  // Inicializar cuando el DOM esté listo
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
+      window.spaNavigator = new SPANavigator();
+      console.log('SPA Navigator inicializado correctamente');
+    } catch (error) {
+      console.error('Error al inicializar SPA Navigator:', error);
+    }
+  });
+</script>
+
+<style lang="stylus">
+  aside
+    background var(--bg-secondary)
+    border-right 1px solid var(--border-color)
+    display flex
+    flex-direction column
+    width 250px
+    flex-shrink 0
+    height 100vh
     
-    .app-view
+    @media (max-width: 768px)
       display none
-      
-    .app-view.active
+    
+  .sidebar-header
+    padding 1rem
+    border-bottom 1px solid var(--border-color)
+    
+  .main-content
+    display flex
+    flex-direction column
+    flex 1
+    height 100vh
+    
+  header
+    padding 1rem 2rem
+    background var(--bg-card)
+    border-bottom 1px solid var(--border-color)
+    display flex
+    justify-content space-between
+    align-items center
+    flex-shrink 0
+    
+    .user-info
+      color var(--text-secondary)
+      font-size 0.9rem
+    
+  main
+    padding 2rem
+    overflow-y auto
+    flex 1
+    
+  .view
+    display none
+    
+    &.active
       display block
       animation fadeIn 0.3s ease-in-out
-    
-    @keyframes fadeIn
-      from
-        opacity 0
-        transform translateY(10px)
-      to
-        opacity 1
-        transform translateY(0)
+  
+  @keyframes fadeIn
+    from
+      opacity 0
+      transform translateY(10px)
+    to
+      opacity 1
+      transform translateY(0)
 </style>
 

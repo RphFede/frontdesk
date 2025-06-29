@@ -2,35 +2,35 @@
 // Lógica del componente si es necesaria
 ---
 
-<div class="dashboard-container">
+<div>
   <h1>📊 Resumen General</h1>
   
-  <div class="dashboard-grid">
-    <div class="stats-card">
+  <div class="stats-grid">
+    <div class="card">
       <h3>Total Facturas</h3>
-      <span class="stat-number">1,247</span>
-      <span class="stat-date">Este mes</span>
+      <span class="number">1,247</span>
+      <span class="date">Este mes</span>
     </div>
-    <div class="stats-card">
+    <div class="card">
       <h3>Monto Total</h3>
-      <span class="stat-number">$2.4M</span>
-      <span class="stat-date">Año 2024</span>
+      <span class="number">$2.4M</span>
+      <span class="date">Año 2024</span>
     </div>
-    <div class="stats-card">
+    <div class="card">
       <h3>Pendientes</h3>
-      <span class="stat-number">23</span>
-      <span class="stat-date">Por autorizar</span>
+      <span class="number">23</span>
+      <span class="date">Por autorizar</span>
     </div>
-    <div class="stats-card">
+    <div class="card">
       <h3>Proveedores</h3>
-      <span class="stat-number">156</span>
-      <span class="stat-date">Activos</span>
+      <span class="number">156</span>
+      <span class="date">Activos</span>
     </div>
   </div>
   
-  <div class="recent-section">
+  <section>
     <h2>🕒 Últimas Facturas Ingresadas</h2>
-    <table class="invoice-table">
+    <table>
       <thead>
         <tr>
           <th>Fecha</th>
@@ -45,157 +45,86 @@
           <td>2024-01-25</td>
           <td>Constructora ABC S.A.</td>
           <td>$45,000</td>
-          <td><span class="status-badge pending">Pendiente</span></td>
-          <td><button class="btn btn-sm btn-primary">Ver</button></td>
+          <td><span class="status pending">Pendiente</span></td>
+          <td><button class="btn-sm">Ver</button></td>
         </tr>
         <tr>
           <td>2024-01-24</td>
           <td>Suministros Municipales</td>
           <td>$12,500</td>
-          <td><span class="status-badge paid">Pagada</span></td>
-          <td><button class="btn btn-sm btn-primary">Ver</button></td>
+          <td><span class="status paid">Pagada</span></td>
+          <td><button class="btn-sm">Ver</button></td>
         </tr>
       </tbody>
     </table>
-  </div>
+  </section>
 </div>
 
 <style lang="stylus">
-// Dashboard Cards - Estilo Excel Mejorado
-.dashboard-grid
+.stats-grid
   display grid
   grid-template-columns repeat(4, 1fr)
   gap 1.5rem
   margin-bottom 2rem
 
-.stats-card
-  background var(--bg-card)
-  padding 1.5rem
-  border-radius 8px
-  border 1px solid var(--border-color)
-  text-align center
-  transition all 0.3s ease
-  
-  &:hover
-    border-color var(--accent-primary)
-    transform translateY(-2px)
-    box-shadow 0 8px 16px rgba(42,42,42,0.3)
+  .card
+    background var(--bg-card)
+    padding 1.5rem
+    border-radius 8px
+    border 1px solid var(--border-color)
+    text-align center
+    transition all 0.3s ease
     
-  h3
-    color var(--text-secondary)
-    font-size 0.85rem
-    font-weight 600
-    margin-bottom 0.5rem
-    text-transform uppercase
-    letter-spacing 0.5px
+    &:hover
+      border-color var(--accent-primary)
+      transform translateY(-2px)
+    
+    h3
+      font-size 0.9rem
+      color var(--text-secondary)
+      margin-bottom 0.5rem
+      text-transform uppercase
+      letter-spacing 0.5px
+    
+    .number
+      display block
+      font-size 2rem
+      font-weight 700
+      color var(--accent-primary)
+      margin-bottom 0.25rem
+    
+    .date
+      font-size 0.8rem
+      color var(--text-secondary)
 
-.stat-number
-  font-size 2rem
-  font-weight 700
-  color var(--accent-primary)
-  display block
-  margin-bottom 0.25rem
-
-.stat-date
-  color var(--text-secondary)
-  font-size 0.8rem
-
-.recent-section
+section
   margin-top 2rem
   
   h2
-    color var(--text-primary)
-    font-size 1.2rem
     margin-bottom 1rem
-    padding-bottom 0.5rem
-    border-bottom 1px solid var(--border-color)
-
-// Tabla Principal - Estilo Excel Profesional
-.invoice-table
-  width 100%
-  background var(--bg-card)
-  border-radius 8px
-  overflow hidden
-  border 1px solid var(--border-color)
-  font-size 0.9rem
-  
-  th
-    background var(--bg-secondary)
-    color var(--text-secondary)
-    padding 1rem 0.75rem
-    text-align left
-    font-weight 600
-    font-size 0.8rem
-    text-transform uppercase
-    letter-spacing 0.5px
-    border-bottom 1px solid var(--border-color)
-    
-  td
-    padding 0.75rem
-    border-bottom 1px solid var(--border-color)
     color var(--text-primary)
-    
-  tr:hover
-    background var(--table-hover)
-    
-  tr:last-child td
-    border-bottom none
 
-// Estados de Factura
-.status-badge
-  padding 0.25rem 0.75rem
-  border-radius 12px
-  font-size 0.75rem
-  font-weight 600
-  text-transform uppercase
-  display inline-block
+.status
+  padding 0.25rem 0.5rem
+  border-radius 4px
+  font-size 0.8rem
+  font-weight 500
+  
+  &.pending
+    background var(--warning-color)
+    color white
   
   &.paid
-    background rgba(107,155,107,0.2)
-    color var(--success-color)
-    border 1px solid var(--success-color)
-    
-  &.pending
-    background rgba(209,166,107,0.2)
-    color var(--warning-color)
-    border 1px solid var(--warning-color)
-    
-  &.overdue
-    background rgba(209,122,122,0.2)
-    color var(--error-color)
-    border 1px solid var(--error-color)
-
-// Botones del Sistema
-.btn
-  padding 0.75rem 1.5rem
-  border none
-  border-radius 4px
-  cursor pointer
-  font-weight 500
-  font-size 0.9rem
-  transition all 0.2s ease
-  text-decoration none
-  display inline-flex
-  align-items center
-  gap 0.5rem
-  
-  &.btn-primary
-    background var(--accent-primary)
+    background var(--success-color)
     color white
-    
-    &:hover
-      background var(--accent-hover)
-      
-  &.btn-sm
-    padding 0.5rem 1rem
-    font-size 0.8rem
 
-// Responsive
-@media (max-width: 1200px)
-  .dashboard-grid
-    grid-template-columns repeat(2, 1fr)
-    
-@media (max-width: 768px)
-  .dashboard-grid
-    grid-template-columns 1fr
+.btn-sm
+  padding 0.25rem 0.5rem
+  background var(--accent-primary)
+  color white
+  border-radius 4px
+  font-size 0.8rem
+  
+  &:hover
+    background var(--accent-hover)
 </style>

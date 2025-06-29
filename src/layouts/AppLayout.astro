@@ -12,14 +12,22 @@ import '../styles/app.styl';
   <meta name="theme-color" content="#2a2a2a">
 </head>
 <body>
-  <div class="app-container">
+  <div class="container">
     <slot />
   </div>
 </body>
 </html>
 
 <style lang="stylus">
-  .app-container
-    min-height 100vh
-    background var(--bg-primary)
+  .container
+    height 100vh
+    width 100vw
+    display flex
+    position fixed
+    top 0
+    left 0
+    
+  @media (max-width: 768px)
+    .container
+      flex-direction column
 </style>
