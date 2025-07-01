@@ -1,5 +1,6 @@
 ---
-import AppLayout from '../layouts/AppLayout.astro';
+const { title } = Astro.props;
+import '../styles/app.styl';
 import Navigation from '../components/Navigation.astro';
 import Dashboard from '../views/Dashboard.astro';
 import Invoices from '../views/Invoices.astro';
@@ -8,45 +9,58 @@ import Export from '../views/Export.astro';
 import Settings from '../views/Settings.astro';
 ---
 
-<AppLayout title="Sistema FrontDesk - Gestión de Facturas">
-  <aside>
-    <div class="sidebar-header">
-      <h2>📋 FrontDesk</h2>
-    </div>
-    <Navigation />
-  </aside>
-
-  <div class="main-content">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
+  <meta name="theme-color" content="#2a2a2a">
+</head>
+<body>
+  <div class="app-container">
     <header>
       <h1>Sistema de Gestión de Facturas</h1>
       <div class="user-info">
         👤 Usuario: Admin | 🕒 Última sesión: Hoy 14:30
       </div>
     </header>
-
-    <main>
-      <section id="dashboard-view" class="view active">
-        <Dashboard />
-      </section>
+    
+    <div class="main-layout">
+      <aside class="sidebar">
+        <nav>
+          <Navigation />
+        </nav>
+      </aside>
       
-      <section id="invoices-view" class="view">
-        <Invoices />
-      </section>
-      
-      <section id="suppliers-view" class="view">
-        <Suppliers />
-      </section>
-      
-      <section id="export-view" class="view">
-        <Export />
-      </section>
-      
-      <section id="settings-view" class="view">
-        <Settings />
-      </section>
-    </main>
+      <main class="content">
+        <section id="dashboard-view" class="view active">
+          <Dashboard />
+        </section>
+        
+        <section id="invoices-view" class="view">
+          <Invoices />
+        </section>
+        
+        <section id="suppliers-view" class="view">
+          <Suppliers />
+        </section>
+        
+        <section id="export-view" class="view">
+          <Export />
+        </section>
+        
+        <section id="settings-view" class="view">
+          <Settings />
+        </section>
+      </main>
+    </div>
+    
+    <footer>
+      <p>© 2023 FrontDesk. Todos los derechos reservados.</p>
+    </footer>
   </div>
-</AppLayout>
+</body>
 
 <script>
   class SPANavigator {
@@ -180,29 +194,15 @@ import Settings from '../views/Settings.astro';
     }
   });
 </script>
+</html>
+
 
 <style lang="stylus">
-  aside
-    background var(--bg-secondary)
-    border-right 1px solid var(--border-color)
+  .app-container
     display flex
     flex-direction column
-    width 250px
-    flex-shrink 0
     height 100vh
-    
-    @media (max-width: 768px)
-      display none
-    
-  .sidebar-header
-    padding 1rem
-    border-bottom 1px solid var(--border-color)
-    
-  .main-content
-    display flex
-    flex-direction column
-    flex 1
-    height 100vh
+    width 100%
     
   header
     padding 1rem 2rem
@@ -212,15 +212,35 @@ import Settings from '../views/Settings.astro';
     justify-content space-between
     align-items center
     flex-shrink 0
+    z-index 10
     
     .user-info
       color var(--text-secondary)
       font-size 0.9rem
+  
+  .main-layout
+    display flex
+    flex 1
+    height calc(100vh - 140px) // Resta la altura del header y footer
     
-  main
+  .sidebar
+    background var(--bg-secondary)
+    width 250px
+    flex-shrink 0
+    border-right 1px solid var(--border-color)
+    overflow-y auto
+    
+    @media (max-width: 768px)
+      width 200px
+      
+    @media (max-width: 640px)
+      display none
+    
+  .content
+    flex 1
     padding 2rem
     overflow-y auto
-    flex 1
+    background var(--bg-primary)
     
   .view
     display none
@@ -228,6 +248,15 @@ import Settings from '../views/Settings.astro';
     &.active
       display block
       animation fadeIn 0.3s ease-in-out
+  
+  footer
+    padding 1rem 2rem
+    background var(--bg-card)
+    border-top 1px solid var(--border-color)
+    text-align center
+    color var(--text-secondary)
+    font-size 0.8rem
+    flex-shrink 0
   
   @keyframes fadeIn
     from
@@ -237,4 +266,3 @@ import Settings from '../views/Settings.astro';
       opacity 1
       transform translateY(0)
 </style>
-
