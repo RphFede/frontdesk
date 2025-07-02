@@ -8,28 +8,28 @@
   <div class="stats-grid">
     <div class="card">
       <h3>Total Facturas</h3>
-      <span class="number">1,247</span>
+      <span class="number" id="total-invoices">0</span>
       <span class="date">Este mes</span>
     </div>
     <div class="card">
       <h3>Monto Total</h3>
-      <span class="number">$2.4M</span>
+      <span class="number" id="total-amount">$0</span>
       <span class="date">Año 2024</span>
     </div>
     <div class="card">
       <h3>Pendientes</h3>
-      <span class="number">23</span>
+      <span class="number" id="pending-invoices">0</span>
       <span class="date">Por autorizar</span>
     </div>
     <div class="card">
       <h3>Proveedores</h3>
-      <span class="number">156</span>
+      <span class="number" id="total-suppliers">0</span>
       <span class="date">Activos</span>
     </div>
   </div>
   
-  <section>
-    <h2>🕒 Últimas Facturas Ingresadas</h2>
+  <section class="recent-invoices">
+    <h2>📋 Facturas Recientes</h2>
     <table>
       <thead>
         <tr>
@@ -40,20 +40,9 @@
           <th>Acciones</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="recent-invoices-tbody">
         <tr>
-          <td>2024-01-25</td>
-          <td>Constructora ABC S.A.</td>
-          <td>$45,000</td>
-          <td><span class="status pending">Pendiente</span></td>
-          <td><button class="btn-sm">Ver</button></td>
-        </tr>
-        <tr>
-          <td>2024-01-24</td>
-          <td>Suministros Municipales</td>
-          <td>$12,500</td>
-          <td><span class="status paid">Pagada</span></td>
-          <td><button class="btn-sm">Ver</button></td>
+          <td colspan="5" class="no-data">Cargando facturas...</td>
         </tr>
       </tbody>
     </table>

@@ -1,12 +1,225 @@
 ---
 const { title } = Astro.props;
 import '../styles/app.styl';
-import Navigation from '../components/Navigation.astro';
+import '../styles/navigation.css';
 import Dashboard from '../views/Dashboard.astro';
 import Invoices from '../views/Invoices.astro';
-import Suppliers from '../views/Suppliers.astro';
-import Export from '../views/Export.astro';
+import LoadBill from '../views/LoadBill.astro';
 import Settings from '../views/Settings.astro';
+import Navigation from '../components/Navigation.astro';
+
+// Mock data para probar la funcionalidad de la aplicación
+const mock = {
+  // Datos de proveedores
+  suppliers: [
+    {
+      id: 1,
+      companyName: "Constructora ABC S.A.",
+      rut: "12.345.678-9",
+      contactPerson: "Juan Pérez",
+      phone: "+56 9 1234 5678",
+      email: "contacto@abc.com",
+      category: "Construcción",
+      address: "Av. Principal 123, Santiago",
+      status: "Activo",
+      registrationDate: "2023-01-15"
+    },
+    {
+      id: 2,
+      companyName: "Suministros Municipales Ltda.",
+      rut: "98.765.432-1",
+      contactPerson: "María González",
+      phone: "+56 9 8765 4321",
+      email: "ventas@suministros.com",
+      category: "Suministros",
+      address: "Calle Comercio 456, Valparaíso",
+      status: "Activo",
+      registrationDate: "2023-03-22"
+    },
+    {
+      id: 3,
+      companyName: "Servicios Generales SRL",
+      rut: "55.666.777-8",
+      contactPerson: "Carlos Rodríguez",
+      phone: "+56 9 5555 6666",
+      email: "info@servicios.com",
+      category: "Servicios",
+      address: "Plaza Central 789, Concepción",
+      status: "Pendiente",
+      registrationDate: "2024-01-10"
+    },
+    {
+      id: 4,
+      companyName: "TechSolutions SpA",
+      rut: "11.222.333-4",
+      contactPerson: "Ana Silva",
+      phone: "+56 9 1111 2222",
+      email: "contacto@techsolutions.cl",
+      category: "Tecnología",
+      address: "Torre Empresarial, Piso 15, Las Condes",
+      status: "Activo",
+      registrationDate: "2023-08-05"
+    },
+    {
+      id: 5,
+      companyName: "Mantenimiento Integral Ltda.",
+      rut: "77.888.999-0",
+      contactPerson: "Roberto Morales",
+      phone: "+56 9 7777 8888",
+      email: "servicios@mantenimiento.cl",
+      category: "Mantenimiento",
+      address: "Sector Industrial 321, Antofagasta",
+      status: "Activo",
+      registrationDate: "2023-11-18"
+    }
+  ],
+
+  // Datos de facturas
+  invoices: [
+    {
+      id: 1,
+      invoiceNumber: "FAC-2024-001",
+      supplierId: 1,
+      supplierName: "Constructora ABC S.A.",
+      amount: 45000,
+      currency: "CLP",
+      issueDate: "2024-01-25",
+      dueDate: "2024-02-25",
+      status: "Pendiente",
+      description: "Materiales de construcción para proyecto municipal",
+      category: "Construcción",
+      paymentMethod: "Transferencia",
+      taxAmount: 8550,
+      netAmount: 36450
+    },
+    {
+      id: 2,
+      invoiceNumber: "FAC-2024-002",
+      supplierId: 2,
+      supplierName: "Suministros Municipales Ltda.",
+      amount: 12500,
+      currency: "CLP",
+      issueDate: "2024-01-24",
+      dueDate: "2024-02-24",
+      status: "Pagada",
+      description: "Suministros de oficina y papelería",
+      category: "Suministros",
+      paymentMethod: "Cheque",
+      taxAmount: 2375,
+      netAmount: 10125
+    },
+    {
+      id: 3,
+      invoiceNumber: "FAC-2024-003",
+      supplierId: 4,
+      supplierName: "TechSolutions SpA",
+      amount: 85000,
+      currency: "CLP",
+      issueDate: "2024-01-23",
+      dueDate: "2024-02-23",
+      status: "Vencida",
+      description: "Licencias de software y soporte técnico",
+      category: "Tecnología",
+      paymentMethod: "Transferencia",
+      taxAmount: 16150,
+      netAmount: 68850
+    },
+    {
+      id: 4,
+      invoiceNumber: "FAC-2024-004",
+      supplierId: 5,
+      supplierName: "Mantenimiento Integral Ltda.",
+      amount: 28000,
+      currency: "CLP",
+      issueDate: "2024-01-22",
+      dueDate: "2024-02-22",
+      status: "Pagada",
+      description: "Mantenimiento preventivo de equipos",
+      category: "Mantenimiento",
+      paymentMethod: "Transferencia",
+      taxAmount: 5320,
+      netAmount: 22680
+    },
+    {
+      id: 5,
+      invoiceNumber: "FAC-2024-005",
+      supplierId: 3,
+      supplierName: "Servicios Generales SRL",
+      amount: 15750,
+      currency: "CLP",
+      issueDate: "2024-01-21",
+      dueDate: "2024-02-21",
+      status: "Pendiente",
+      description: "Servicios de limpieza y jardinería",
+      category: "Servicios",
+      paymentMethod: "Transferencia",
+      taxAmount: 2992.5,
+      netAmount: 12757.5
+    },
+    {
+      id: 6,
+      invoiceNumber: "FAC-2024-006",
+      supplierId: 1,
+      supplierName: "Constructora ABC S.A.",
+      amount: 120000,
+      currency: "CLP",
+      issueDate: "2024-01-20",
+      dueDate: "2024-02-20",
+      status: "Pagada",
+      description: "Reparación de infraestructura vial",
+      category: "Construcción",
+      paymentMethod: "Transferencia",
+      taxAmount: 22800,
+      netAmount: 97200
+    }
+  ],
+
+  // Estadísticas del dashboard
+  stats: {
+    totalInvoices: 1247,
+    totalAmount: 2400000,
+    pendingInvoices: 23,
+    activeSuppliers: 156,
+    monthlyGrowth: 12.5,
+    averageInvoiceAmount: 35000,
+    topCategory: "Construcción",
+    paymentMethods: {
+      "Transferencia": 65,
+      "Cheque": 25,
+      "Efectivo": 10
+    }
+  },
+
+  // Categorías disponibles
+  categories: [
+    "Construcción",
+    "Suministros",
+    "Servicios",
+    "Mantenimiento",
+    "Tecnología",
+    "Transporte",
+    "Consultoría",
+    "Alimentación"
+  ],
+
+  // Estados de facturas
+  invoiceStatuses: [
+    "Pendiente",
+    "Pagada",
+    "Vencida",
+    "Cancelada",
+    "En Proceso"
+  ],
+
+  // Métodos de pago
+  paymentMethods: [
+    "Transferencia",
+    "Cheque",
+    "Efectivo",
+    "Tarjeta de Crédito",
+    "Débito Automático"
+  ]
+};
 ---
 
 <!DOCTYPE html>
@@ -28,28 +241,22 @@ import Settings from '../views/Settings.astro';
     
     <div class="main-layout">
       <aside class="sidebar">
-        <nav>
           <Navigation />
-        </nav>
       </aside>
       
       <main class="content">
         <section id="dashboard-view" class="view active">
           <Dashboard />
         </section>
+
+        <section id="loadbill-view" class="view">
+          <LoadBill />
+        </section>
         
         <section id="invoices-view" class="view">
           <Invoices />
         </section>
-        
-        <section id="suppliers-view" class="view">
-          <Suppliers />
-        </section>
-        
-        <section id="export-view" class="view">
-          <Export />
-        </section>
-        
+               
         <section id="settings-view" class="view">
           <Settings />
         </section>
@@ -61,136 +268,225 @@ import Settings from '../views/Settings.astro';
     </footer>
   </div>
 </body>
-
 <script>
-  class SPANavigator {
-    constructor() {
-      this.currentView = 'dashboard';
-      this.views = new Map();
-      this.initViews();
-      this.initNavigation();
-    }
-
-    initViews() {
-      const viewElements = document.querySelectorAll('.view');
-      viewElements.forEach(view => {
-        const viewId = view.id.replace('-view', '');
-        this.views.set(viewId, view);
-      });
-    }
-
-    initNavigation() {
-      const navButtons = document.querySelectorAll('nav button');
-      
-      navButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-          const targetView = e.target.dataset.target;
-          if (targetView) {
-            this.navigateTo(targetView);
-          }
-        });
-      });
-    }
-
-    navigateTo(viewName) {
-      if (!this.views.has(viewName)) {
-        console.error(`Vista '${viewName}' no encontrada`);
-        return;
+  // Importar utilidades
+  import '../scripts/utils.js';
+  
+  // Exponer datos mock al objeto window para que el navegador SPA pueda acceder
+  (window as any).mockData = {
+    suppliers: [
+      {
+        id: 1,
+        companyName: "Constructora ABC S.A.",
+        rut: "12.345.678-9",
+        contactPerson: "Juan Pérez",
+        phone: "+56 9 1234 5678",
+        email: "contacto@abc.com",
+        category: "Construcción",
+        address: "Av. Principal 123, Santiago",
+        status: "Activo",
+        registrationDate: "2023-01-15"
+      },
+      {
+        id: 2,
+        companyName: "Suministros Municipales Ltda.",
+        rut: "98.765.432-1",
+        contactPerson: "María González",
+        phone: "+56 9 8765 4321",
+        email: "ventas@suministros.com",
+        category: "Suministros",
+        address: "Calle Comercio 456, Valparaíso",
+        status: "Activo",
+        registrationDate: "2023-03-22"
+      },
+      {
+        id: 3,
+        companyName: "Servicios Generales SRL",
+        rut: "55.666.777-8",
+        contactPerson: "Carlos Rodríguez",
+        phone: "+56 9 5555 6666",
+        email: "info@servicios.com",
+        category: "Servicios",
+        address: "Plaza Central 789, Concepción",
+        status: "Pendiente",
+        registrationDate: "2024-01-10"
+      },
+      {
+        id: 4,
+        companyName: "TechSolutions SpA",
+        rut: "11.222.333-4",
+        contactPerson: "Ana Silva",
+        phone: "+56 9 1111 2222",
+        email: "contacto@techsolutions.cl",
+        category: "Tecnología",
+        address: "Torre Empresarial, Piso 15, Las Condes",
+        status: "Activo",
+        registrationDate: "2023-08-05"
+      },
+      {
+        id: 5,
+        companyName: "Mantenimiento Integral Ltda.",
+        rut: "77.888.999-0",
+        contactPerson: "Roberto Morales",
+        phone: "+56 9 7777 8888",
+        email: "servicios@mantenimiento.cl",
+        category: "Mantenimiento",
+        address: "Sector Industrial 321, Antofagasta",
+        status: "Activo",
+        registrationDate: "2023-11-18"
       }
-
-      // Ocultar vista actual
-      if (this.views.has(this.currentView)) {
-        this.views.get(this.currentView).classList.remove('active');
+    ],
+    invoices: [
+      {
+        id: 1,
+        invoiceNumber: "FAC-2024-001",
+        supplierId: 1,
+        supplierName: "Constructora ABC S.A.",
+        amount: 45000,
+        currency: "CLP",
+        issueDate: "2024-01-25",
+        dueDate: "2024-02-25",
+        status: "Pendiente",
+        description: "Materiales de construcción para proyecto municipal",
+        category: "Construcción",
+        paymentMethod: "Transferencia",
+        taxAmount: 8550,
+        netAmount: 36450
+      },
+      {
+        id: 2,
+        invoiceNumber: "FAC-2024-002",
+        supplierId: 2,
+        supplierName: "Suministros Municipales Ltda.",
+        amount: 12500,
+        currency: "CLP",
+        issueDate: "2024-01-24",
+        dueDate: "2024-02-24",
+        status: "Pagada",
+        description: "Suministros de oficina y papelería",
+        category: "Suministros",
+        paymentMethod: "Cheque",
+        taxAmount: 2375,
+        netAmount: 10125
+      },
+      {
+        id: 3,
+        invoiceNumber: "FAC-2024-003",
+        supplierId: 4,
+        supplierName: "TechSolutions SpA",
+        amount: 85000,
+        currency: "CLP",
+        issueDate: "2024-01-23",
+        dueDate: "2024-02-23",
+        status: "Vencida",
+        description: "Licencias de software y soporte técnico",
+        category: "Tecnología",
+        paymentMethod: "Transferencia",
+        taxAmount: 16150,
+        netAmount: 68850
+      },
+      {
+        id: 4,
+        invoiceNumber: "FAC-2024-004",
+        supplierId: 5,
+        supplierName: "Mantenimiento Integral Ltda.",
+        amount: 28000,
+        currency: "CLP",
+        issueDate: "2024-01-22",
+        dueDate: "2024-02-22",
+        status: "Pagada",
+        description: "Mantenimiento preventivo de equipos",
+        category: "Mantenimiento",
+        paymentMethod: "Transferencia",
+        taxAmount: 5320,
+        netAmount: 22680
+      },
+      {
+        id: 5,
+        invoiceNumber: "FAC-2024-005",
+        supplierId: 3,
+        supplierName: "Servicios Generales SRL",
+        amount: 15750,
+        currency: "CLP",
+        issueDate: "2024-01-21",
+        dueDate: "2024-02-21",
+        status: "Pendiente",
+        description: "Servicios de limpieza y jardinería",
+        category: "Servicios",
+        paymentMethod: "Transferencia",
+        taxAmount: 2992.5,
+        netAmount: 12757.5
+      },
+      {
+        id: 6,
+        invoiceNumber: "FAC-2024-006",
+        supplierId: 1,
+        supplierName: "Constructora ABC S.A.",
+        amount: 120000,
+        currency: "CLP",
+        issueDate: "2024-01-20",
+        dueDate: "2024-02-20",
+        status: "Pagada",
+        description: "Reparación de infraestructura vial",
+        category: "Construcción",
+        paymentMethod: "Transferencia",
+        taxAmount: 22800,
+        netAmount: 97200
       }
-
-      // Mostrar nueva vista
-      this.views.get(viewName).classList.add('active');
-      this.updateActiveNav(viewName);
-      this.currentView = viewName;
-      this.onViewChange(viewName);
-    }
-
-    updateActiveNav(activeView) {
-      const navButtons = document.querySelectorAll('nav button');
-      navButtons.forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.dataset.target === activeView) {
-          btn.classList.add('active');
-        }
-      });
-    }
-
-    onViewChange(viewName) {
-      switch(viewName) {
-        case 'invoices':
-          this.initInvoicesFeatures();
-          break;
-        case 'suppliers':
-          this.initSuppliersFeatures();
-          break;
-        case 'export':
-          this.initExportFeatures();
-          break;
-        case 'settings':
-          this.initSettingsFeatures();
-          break;
+    ],
+    stats: {
+      totalInvoices: 1247,
+      totalAmount: 2400000,
+      pendingInvoices: 23,
+      activeSuppliers: 156,
+      monthlyGrowth: 12.5,
+      averageInvoiceAmount: 35000,
+      topCategory: "Construcción",
+      paymentMethods: {
+        "Transferencia": 65,
+        "Cheque": 25,
+        "Efectivo": 10
       }
-    }
+    },
+    categories: [
+      "Construcción",
+      "Suministros",
+      "Servicios",
+      "Mantenimiento",
+      "Tecnología",
+      "Transporte",
+      "Consultoría",
+      "Alimentación"
+    ],
+    invoiceStatuses: [
+      "Pendiente",
+      "Pagada",
+      "Vencida",
+      "Cancelada",
+      "En Proceso"
+    ],
+    paymentMethods: [
+      "Transferencia",
+      "Cheque",
+      "Efectivo",
+      "Tarjeta de Crédito",
+      "Débito Automático"
+    ]
+  };
 
-    initInvoicesFeatures() {
-      const searchBox = document.querySelector('#invoices-view input[type="text"]');
-      if (searchBox && !searchBox.hasAttribute('data-initialized')) {
-        searchBox.addEventListener('input', (e) => {
-          this.filterInvoices(e.target.value);
-        });
-        searchBox.setAttribute('data-initialized', 'true');
-      }
-    }
-
-    initSuppliersFeatures() {
-      const searchBox = document.querySelector('#suppliers-view input[type="text"]');
-      if (searchBox && !searchBox.hasAttribute('data-initialized')) {
-        searchBox.addEventListener('input', (e) => {
-          this.filterSuppliers(e.target.value);
-        });
-        searchBox.setAttribute('data-initialized', 'true');
-      }
-    }
-
-    initExportFeatures() {
-      // Inicializar funcionalidades de exportación
-      console.log('Funcionalidades de exportación inicializadas');
-    }
-
-    initSettingsFeatures() {
-      // Inicializar funcionalidades de configuración
-      console.log('Funcionalidades de configuración inicializadas');
-    }
-
-    filterInvoices(searchTerm) {
-      const tableRows = document.querySelectorAll('#invoices-view table tbody tr');
-      tableRows.forEach(row => {
-        const text = row.textContent?.toLowerCase() || '';
-        row.style.display = text.includes(searchTerm.toLowerCase()) ? '' : 'none';
-      });
-    }
-
-    filterSuppliers(searchTerm) {
-      const tableRows = document.querySelectorAll('#suppliers-view table tbody tr');
-      tableRows.forEach(row => {
-        const text = row.textContent?.toLowerCase() || '';
-        row.style.display = text.includes(searchTerm.toLowerCase()) ? '' : 'none';
-      });
-    }
-  }
-
-  // Inicializar cuando el DOM esté listo
-  document.addEventListener('DOMContentLoaded', () => {
+  // Importar y inicializar el navegador SPA cuando el DOM esté listo
+  document.addEventListener('DOMContentLoaded', async () => {
     try {
-      window.spaNavigator = new SPANavigator();
-      console.log('SPA Navigator inicializado correctamente');
+      // Importar el módulo de navegación
+      const { default: SPANavigator } = await import('../scripts/navigation.js');
+      
+      // Crear una instancia del navegador SPA
+      (window as any).spaNavigator = new SPANavigator();
+      
+      console.log('✅ Sistema de navegación SPA inicializado correctamente');
+      console.log('📊 Mock data loaded:', Object.keys((window as any).mockData));
     } catch (error) {
-      console.error('Error al inicializar SPA Navigator:', error);
+      console.error('❌ Error al inicializar el sistema de navegación:', error);
     }
   });
 </script>
@@ -214,6 +510,66 @@ import Settings from '../views/Settings.astro';
     flex-shrink 0
     z-index 10
     
+  // Estilos para estados de facturas
+  .status
+    padding 0.25rem 0.75rem
+    border-radius 12px
+    font-size 0.875rem
+    font-weight 500
+    text-transform uppercase
+    letter-spacing 0.5px
+    
+    &.pending
+      background #fef3c7
+      color #92400e
+      
+    &.paid
+      background #d1fae5
+      color #065f46
+      
+    &.overdue
+      background #fee2e2
+      color #991b1b
+      
+    &.cancelled
+      background #f3f4f6
+      color #6b7280
+      
+    &.processing
+      background #dbeafe
+      color #1e40af
+      
+  // Estilos para botones pequeños
+  .btn-sm
+    padding 0.375rem 0.75rem
+    font-size 0.875rem
+    border-radius 4px
+    border none
+    background var(--primary-color)
+    color white
+    cursor pointer
+    transition all 0.2s ease
+    
+    &:hover
+      background var(--primary-hover)
+      transform translateY(-1px)
+      
+  // Estilos para mensajes de "no data"
+  .no-data
+    text-align center
+    color var(--text-secondary)
+    font-style italic
+    padding 2rem
+    
+  // Estilos para formularios ocultos
+  #invoice-form, #supplier-form
+    display none
+    margin-top 1rem
+    padding 1.5rem
+    background var(--bg-card)
+    border 1px solid var(--border-color)
+    border-radius 8px
+    
     .user-info
       color var(--text-secondary)
       font-size 0.9rem
@@ -225,10 +581,10 @@ import Settings from '../views/Settings.astro';
     
   .sidebar
     background var(--bg-secondary)
-    width 250px
-    flex-shrink 0
+    width 10rem
+    display flex
+    flex-direction column
     border-right 1px solid var(--border-color)
-    overflow-y auto
     
     @media (max-width: 768px)
       width 200px
@@ -241,7 +597,7 @@ import Settings from '../views/Settings.astro';
     padding 2rem
     overflow-y auto
     background var(--bg-primary)
-    
+
   .view
     display none
     

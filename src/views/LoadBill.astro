@@ -1,0 +1,341 @@
+---
+// Componente dedicado exclusivamente a la carga de nuevas facturas
+---
+
+<div class="loadbill-container">
+  <h1>📤 Cargar Nueva Factura</h1>
+  <p class="subtitle">Registra una nueva factura en el sistema</p>
+  
+  <div class="form-section">
+    <form id="loadbill-form">
+      <!-- Información del Proveedor -->
+      <fieldset>
+        <legend>🏢 Información del Proveedor</legend>
+        <div class="row">
+          <div class="group">
+            <label for="supplier">Proveedor *</label>
+            <select id="supplier" required>
+              <option value="">Seleccionar proveedor...</option>
+              <option value="1">Constructora ABC S.A.</option>
+              <option value="2">Suministros Municipales Ltda.</option>
+              <option value="3">Servicios Generales SRL</option>
+              <option value="4">TechSolutions SpA</option>
+              <option value="5">Mantenimiento Integral Ltda.</option>
+            </select>
+          </div>
+          <div class="group">
+            <label for="supplier-rut">RUT del Proveedor</label>
+            <input type="text" id="supplier-rut" placeholder="12.345.678-9" readonly>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Información de la Factura -->
+      <fieldset>
+        <legend>📄 Datos de la Factura</legend>
+        <div class="row">
+          <div class="group">
+            <label for="invoice-number">Número de Factura *</label>
+            <input type="text" id="invoice-number" placeholder="Ej: FAC-2024-001" required>
+          </div>
+          <div class="group">
+            <label for="invoice-date">Fecha de Emisión *</label>
+            <input type="date" id="invoice-date" required>
+          </div>
+          <div class="group">
+            <label for="due-date">Fecha de Vencimiento *</label>
+            <input type="date" id="due-date" required>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="group">
+            <label for="description">Descripción *</label>
+            <textarea id="description" placeholder="Describe los productos o servicios facturados..." required></textarea>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Información Financiera -->
+      <fieldset>
+        <legend>💰 Información Financiera</legend>
+        <div class="row">
+          <div class="group">
+            <label for="net-amount">Monto Neto *</label>
+            <input type="number" id="net-amount" placeholder="0.00" step="0.01" required>
+          </div>
+          <div class="group">
+            <label for="tax-amount">IVA (19%)</label>
+            <input type="number" id="tax-amount" placeholder="0.00" step="0.01" readonly>
+          </div>
+          <div class="group">
+            <label for="total-amount">Monto Total</label>
+            <input type="number" id="total-amount" placeholder="0.00" step="0.01" readonly>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="group">
+            <label for="category">Categoría *</label>
+            <select id="category" required>
+              <option value="">Seleccionar categoría...</option>
+              <option value="Construcción">Construcción</option>
+              <option value="Suministros">Suministros</option>
+              <option value="Servicios">Servicios</option>
+              <option value="Mantenimiento">Mantenimiento</option>
+              <option value="Tecnología">Tecnología</option>
+              <option value="Transporte">Transporte</option>
+              <option value="Consultoría">Consultoría</option>
+              <option value="Alimentación">Alimentación</option>
+            </select>
+          </div>
+          <div class="group">
+            <label for="payment-method">Método de Pago *</label>
+            <select id="payment-method" required>
+              <option value="">Seleccionar método...</option>
+              <option value="Transferencia">Transferencia</option>
+              <option value="Cheque">Cheque</option>
+              <option value="Efectivo">Efectivo</option>
+              <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
+              <option value="Débito Automático">Débito Automático</option>
+            </select>
+          </div>
+          <div class="group">
+            <label for="currency">Moneda</label>
+            <select id="currency">
+              <option value="CLP" selected>CLP (Peso Chileno)</option>
+              <option value="USD">USD (Dólar)</option>
+              <option value="EUR">EUR (Euro)</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Botones de Acción -->
+      <div class="form-actions">
+        <button type="button" class="secondary" id="cancel-btn">❌ Cancelar</button>
+        <button type="button" class="primary" id="save-draft-btn">💾 Guardar Borrador</button>
+        <button type="submit" class="success" id="submit-btn">✅ Registrar Factura</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style lang="stylus">
+.loadbill-container
+  max-width 1200px
+  margin 0 auto
+  padding 2rem
+  
+  h1
+    color var(--text-primary)
+    margin-bottom 0.5rem
+    font-size 2rem
+    
+  .subtitle
+    color var(--text-secondary)
+    margin-bottom 2rem
+    font-size 1.1rem
+
+.form-section
+  background var(--bg-card)
+  border-radius 12px
+  border 1px solid var(--border-color)
+  padding 2rem
+  box-shadow 0 2px 8px rgba(0, 0, 0, 0.1)
+  
+fieldset
+  border 1px solid var(--border-color)
+  border-radius 8px
+  padding 1.5rem
+  margin-bottom 2rem
+  background rgba(255, 255, 255, 0.02)
+  
+  legend
+    padding 0 1rem
+    color var(--text-primary)
+    font-weight 600
+    font-size 1.1rem
+
+.row
+  display flex
+  gap 1.5rem
+  margin-bottom 1.5rem
+  
+  @media (max-width: 768px)
+    flex-direction column
+    gap 1rem
+  
+.group
+  flex 1
+  
+  label
+    display block
+    margin-bottom 0.5rem
+    color var(--text-primary)
+    font-weight 500
+    font-size 0.9rem
+  
+  input, select, textarea
+    width 100%
+    padding 0.75rem
+    border 1px solid var(--border-color)
+    border-radius 6px
+    background var(--bg-input)
+    color var(--text-primary)
+    font-size 1rem
+    transition border-color 0.2s ease
+    
+    &:focus
+      outline none
+      border-color var(--accent-primary)
+      box-shadow 0 0 0 2px rgba(59, 130, 246, 0.1)
+    
+    &:required:invalid
+      border-color var(--error-color)
+    
+    &[readonly]
+      background var(--bg-disabled)
+      color var(--text-secondary)
+      cursor not-allowed
+  
+  textarea
+    min-height 100px
+    resize vertical
+    font-family inherit
+
+.form-actions
+  display flex
+  gap 1rem
+  justify-content flex-end
+  padding-top 2rem
+  border-top 1px solid var(--border-color)
+  
+  @media (max-width: 768px)
+    flex-direction column
+  
+  button
+    padding 0.75rem 2rem
+    border none
+    border-radius 6px
+    font-weight 600
+    font-size 1rem
+    cursor pointer
+    transition all 0.2s ease
+    
+    &.secondary
+      background var(--bg-secondary)
+      color var(--text-primary)
+      border 1px solid var(--border-color)
+      
+      &:hover
+        background var(--bg-hover)
+    
+    &.primary
+      background var(--accent-primary)
+      color white
+      
+      &:hover
+        background var(--accent-hover)
+        transform translateY(-1px)
+    
+    &.success
+      background var(--success-color)
+      color white
+      
+      &:hover
+        background #5a8a5a
+        transform translateY(-1px)
+</style>
+
+<script>
+  // Funcionalidad para el formulario de carga de facturas
+  document.addEventListener('DOMContentLoaded', function() {
+    const supplierSelect = document.getElementById('supplier');
+    const supplierRutInput = document.getElementById('supplier-rut');
+    const netAmountInput = document.getElementById('net-amount');
+    const taxAmountInput = document.getElementById('tax-amount');
+    const totalAmountInput = document.getElementById('total-amount');
+    const form = document.getElementById('loadbill-form');
+    
+    // Datos de proveedores (en una aplicación real, esto vendría de una API)
+    const suppliers = {
+      '1': { rut: '12.345.678-9', name: 'Constructora ABC S.A.' },
+      '2': { rut: '98.765.432-1', name: 'Suministros Municipales Ltda.' },
+      '3': { rut: '55.666.777-8', name: 'Servicios Generales SRL' },
+      '4': { rut: '11.222.333-4', name: 'TechSolutions SpA' },
+      '5': { rut: '77.888.999-0', name: 'Mantenimiento Integral Ltda.' }
+    };
+    
+    // Actualizar RUT cuando se selecciona un proveedor
+    supplierSelect?.addEventListener('change', function() {
+      const selectedSupplier = suppliers[this.value];
+      if (selectedSupplier) {
+        supplierRutInput.value = selectedSupplier.rut;
+      } else {
+        supplierRutInput.value = '';
+      }
+    });
+    
+    // Calcular IVA y total automáticamente
+    netAmountInput?.addEventListener('input', function() {
+      const netAmount = parseFloat(this.value) || 0;
+      const taxAmount = netAmount * 0.19; // IVA 19%
+      const totalAmount = netAmount + taxAmount;
+      
+      taxAmountInput.value = taxAmount.toFixed(2);
+      totalAmountInput.value = totalAmount.toFixed(2);
+    });
+    
+    // Manejar envío del formulario
+    form?.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Recopilar datos del formulario
+      const formData = new FormData(this);
+      const invoiceData = {
+        supplierId: supplierSelect.value,
+        supplierName: suppliers[supplierSelect.value]?.name,
+        invoiceNumber: document.getElementById('invoice-number').value,
+        issueDate: document.getElementById('invoice-date').value,
+        dueDate: document.getElementById('due-date').value,
+        description: document.getElementById('description').value,
+        netAmount: parseFloat(netAmountInput.value),
+        taxAmount: parseFloat(taxAmountInput.value),
+        totalAmount: parseFloat(totalAmountInput.value),
+        category: document.getElementById('category').value,
+        paymentMethod: document.getElementById('payment-method').value,
+        currency: document.getElementById('currency').value,
+        status: 'Pendiente'
+      };
+      
+      // Aquí se enviarían los datos a la API
+      console.log('Datos de la factura:', invoiceData);
+      
+      // Mostrar mensaje de éxito
+      alert('✅ Factura registrada exitosamente');
+      
+      // Limpiar formulario
+      this.reset();
+      supplierRutInput.value = '';
+      taxAmountInput.value = '';
+      totalAmountInput.value = '';
+    });
+    
+    // Botón cancelar
+    document.getElementById('cancel-btn')?.addEventListener('click', function() {
+      if (confirm('¿Estás seguro de que quieres cancelar? Se perderán todos los datos ingresados.')) {
+        form.reset();
+        supplierRutInput.value = '';
+        taxAmountInput.value = '';
+        totalAmountInput.value = '';
+      }
+    });
+    
+    // Botón guardar borrador
+    document.getElementById('save-draft-btn')?.addEventListener('click', function() {
+      // Aquí se guardaría como borrador
+      alert('💾 Borrador guardado exitosamente');
+    });
+  });
+</script>

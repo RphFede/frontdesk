@@ -2,116 +2,592 @@
 // Lógica del componente si es necesaria
 ---
 
-<div>
-  <h1>🧾 Gestión de Facturas</h1>
+<div class="invoices-container">
+  <h1>🧾 Listado de Facturas</h1>
+  <p class="subtitle">Busca y gestiona las facturas registradas en el sistema</p>
   
   <div class="toolbar">
     <div class="left">
-      <input type="text" placeholder="🔍 Buscar por proveedor, monto, etc...">
-      <select>
-        <option>Todos los estados</option>
-        <option>Pendientes</option>
-        <option>Pagadas</option>
-        <option>Vencidas</option>
+      <input type="text" id="search-input" placeholder="🔍 Buscar por proveedor, número de factura, monto...">
+      <select id="status-filter">
+        <option value="">Todos los estados</option>
+        <option value="Pendiente">Pendientes</option>
+        <option value="Pagada">Pagadas</option>
+        <option value="Vencida">Vencidas</option>
+        <option value="Cancelada">Canceladas</option>
+      </select>
+      <select id="category-filter">
+        <option value="">Todas las categorías</option>
+        <option value="Construcción">Construcción</option>
+        <option value="Suministros">Suministros</option>
+        <option value="Servicios">Servicios</option>
+        <option value="Mantenimiento">Mantenimiento</option>
+        <option value="Tecnología">Tecnología</option>
       </select>
     </div>
     <div class="right">
-      <button class="success" id="new-invoice-btn">➕ Nueva Factura</button>
-      <button class="primary">📤 Exportar</button>
+      <button class="secondary" id="clear-filters-btn">🗑️ Limpiar Filtros</button>
+      <button class="primary" id="export-btn">📤 Exportar</button>
     </div>
   </div>
   
-  <div class="form-section" id="invoice-form" style="display: none;">
-    <h2>➕ Registrar Nueva Factura</h2>
-    <form>
-      <div class="row">
-        <div class="group">
-          <label for="supplier">🏢 Proveedor *</label>
-          <select id="supplier" required>
-            <option value="">Seleccionar proveedor...</option>
-            <option>Constructora ABC S.A.</option>
-            <option>Suministros Municipales Ltda.</option>
-          </select>
-        </div>
-        <div class="group">
-          <label for="invoice-date">📅 Fecha de Emisión *</label>
-          <input type="date" id="invoice-date" required>
-        </div>
+  <!-- Tabla de facturas -->
+  <div class="table-container">
+    <table id="invoices-table">
+      <thead>
+        <tr>
+          <th>Número</th>
+          <th>Proveedor</th>
+          <th>Fecha Emisión</th>
+          <th>Fecha Vencimiento</th>
+          <th>Monto</th>
+          <th>Estado</th>
+          <th>Categoría</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="invoices-tbody">
+        <!-- Las facturas se cargarán dinámicamente aquí -->
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Paginación -->
+  <div class="pagination">
+    <button id="prev-page" disabled>← Anterior</button>
+    <span id="page-info">Página 1 de 1</span>
+    <button id="next-page" disabled>Siguiente →</button>
+  </div>
+  
+  <!-- Modal para ver detalles de factura -->
+  <div id="invoice-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>📄 Detalles de la Factura</h3>
+        <button class="close-btn" id="close-modal">✕</button>
       </div>
-      
-      <div class="row">
-        <div class="group">
-          <label for="amount">💰 Monto *</label>
-          <input type="number" id="amount" placeholder="0.00" step="0.01" required>
-        </div>
-        <div class="group">
-          <label for="invoice-number">📄 Número de Factura</label>
-          <input type="text" id="invoice-number" placeholder="Ej: FAC-2024-001">
-        </div>
+      <div class="modal-body" id="modal-body">
+        <!-- Contenido del modal se carga dinámicamente -->
       </div>
-    </form>
+    </div>
   </div>
 </div>
 
-<style lang="stylus">
-.toolbar
-  display flex
-  justify-content space-between
-  align-items center
-  margin-bottom 2rem
-  padding 1rem
-  background var(--bg-card)
-  border-radius 8px
-  border 1px solid var(--border-color)
+<style>
+  .invoices-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
   
-  .left, .right
-    display flex
-    gap 1rem
-    align-items center
+  h1 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 28px;
+    font-weight: 600;
+  }
   
-  input[type="text"]
-    width 300px
+  .subtitle {
+    color: #7f8c8d;
+    margin-bottom: 25px;
+    font-size: 16px;
+  }
   
-  button
-    padding 0.5rem 1rem
-    border-radius 4px
-    font-weight 500
-    
-    &.success
-      background var(--success-color)
-      color white
-      
-      &:hover
-        background #5a8a5a
-    
-    &.primary
-      background var(--accent-primary)
-      color white
-      
-      &:hover
-        background var(--accent-hover)
-
-.form-section
-  background var(--bg-card)
-  padding 2rem
-  border-radius 8px
-  border 1px solid var(--border-color)
-  margin-bottom 2rem
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
   
-  .row
-    display flex
-    gap 1rem
-    margin-bottom 1rem
-    
-    .group
-      flex 1
-      
-      label
-        display block
-        margin-bottom 0.5rem
-        color var(--text-primary)
-        font-weight 500
-      
-      input, select
-        width 100%
+  .left {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  
+  .right {
+    display: flex;
+    gap: 12px;
+  }
+  
+  input, select {
+    padding: 10px 14px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.95);
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+  
+  input:focus, select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  }
+  
+  #search-input {
+    min-width: 300px;
+  }
+  
+  button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .primary {
+    background: #3498db;
+    color: white;
+  }
+  
+  .secondary {
+    background: #95a5a6;
+    color: white;
+  }
+  
+  .primary:hover {
+    background: #2980b9;
+    transform: translateY(-1px);
+  }
+  
+  .secondary:hover {
+    background: #7f8c8d;
+    transform: translateY(-1px);
+  }
+  
+  .table-container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  thead {
+    background: rgba(52, 152, 219, 0.1);
+  }
+  
+  th {
+    padding: 15px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #2c3e50;
+    border-bottom: 2px solid rgba(52, 152, 219, 0.2);
+  }
+  
+  td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: #34495e;
+  }
+  
+  tbody tr:hover {
+    background: rgba(52, 152, 219, 0.05);
+  }
+  
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+  }
+  
+  .pagination button {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #2c3e50;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .pagination button:not(:disabled):hover {
+    background: rgba(52, 152, 219, 0.1);
+  }
+  
+  #page-info {
+    color: #7f8c8d;
+    font-weight: 500;
+  }
+  
+  /* Modal styles */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  .modal-header h3 {
+    margin: 0;
+    color: #2c3e50;
+  }
+  
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #7f8c8d;
+    padding: 5px;
+  }
+  
+  .close-btn:hover {
+    color: #e74c3c;
+  }
+  
+  .modal-body {
+    padding: 20px;
+  }
+  
+  /* Status badges */
+  .status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  
+  .status-pendiente {
+    background: #f39c12;
+    color: white;
+  }
+  
+  .status-pagada {
+    background: #27ae60;
+    color: white;
+  }
+  
+  .status-vencida {
+    background: #e74c3c;
+    color: white;
+  }
+  
+  .status-cancelada {
+    background: #95a5a6;
+    color: white;
+  }
+  
+  /* Action buttons in table */
+  .action-btn {
+    padding: 4px 8px;
+    font-size: 12px;
+    margin: 0 2px;
+  }
+  
+  .btn-view {
+    background: #3498db;
+    color: white;
+  }
+  
+  .btn-edit {
+    background: #f39c12;
+    color: white;
+  }
+  
+  .btn-delete {
+    background: #e74c3c;
+    color: white;
+  }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Datos de ejemplo de facturas
+    const invoicesData = [
+      {
+        id: 1,
+        number: 'FAC-2024-001',
+        supplier: 'Constructora ABC S.A.',
+        issueDate: '2024-01-15',
+        dueDate: '2024-02-15',
+        amount: 1250000,
+        status: 'Pendiente',
+        category: 'Construcción'
+      },
+      {
+        id: 2,
+        number: 'FAC-2024-002',
+        supplier: 'Suministros Municipales Ltda.',
+        issueDate: '2024-01-20',
+        dueDate: '2024-02-20',
+        amount: 850000,
+        status: 'Pagada',
+        category: 'Suministros'
+      },
+      {
+        id: 3,
+        number: 'FAC-2024-003',
+        supplier: 'Servicios Técnicos Pro',
+        issueDate: '2024-01-10',
+        dueDate: '2024-01-25',
+        amount: 450000,
+        status: 'Vencida',
+        category: 'Servicios'
+      },
+      {
+        id: 4,
+        number: 'FAC-2024-004',
+        supplier: 'Tecnología Avanzada S.A.',
+        issueDate: '2024-01-25',
+        dueDate: '2024-02-25',
+        amount: 2100000,
+        status: 'Pendiente',
+        category: 'Tecnología'
+      },
+      {
+        id: 5,
+        number: 'FAC-2024-005',
+        supplier: 'Mantenimiento Integral',
+        issueDate: '2024-01-12',
+        dueDate: '2024-02-12',
+        amount: 320000,
+        status: 'Cancelada',
+        category: 'Mantenimiento'
+      }
+    ];
+    
+    let filteredInvoices = [...invoicesData];
+    let currentPage = 1;
+    const itemsPerPage = 10;
+    
+    // Referencias a elementos DOM
+    const searchInput = document.getElementById('search-input');
+    const statusFilter = document.getElementById('status-filter');
+    const categoryFilter = document.getElementById('category-filter');
+    const clearFiltersBtn = document.getElementById('clear-filters-btn');
+    const exportBtn = document.getElementById('export-btn');
+    const invoicesTable = document.getElementById('invoices-table');
+    const invoicesTbody = document.getElementById('invoices-tbody');
+    const prevPageBtn = document.getElementById('prev-page');
+    const nextPageBtn = document.getElementById('next-page');
+    const pageInfo = document.getElementById('page-info');
+    const invoiceModal = document.getElementById('invoice-modal');
+    const closeModalBtn = document.getElementById('close-modal');
+    const modalBody = document.getElementById('modal-body');
+    
+    // Función para formatear moneda
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('es-CL', {
+        style: 'currency',
+        currency: 'CLP'
+      }).format(amount);
+    }
+    
+    // Función para formatear fecha
+    function formatDate(dateString) {
+      return new Date(dateString).toLocaleDateString('es-CL');
+    }
+    
+    // Función para crear badge de estado
+    function createStatusBadge(status) {
+      const statusClass = `status-${status.toLowerCase()}`;
+      return `<span class="status-badge ${statusClass}">${status}</span>`;
+    }
+    
+    // Función para renderizar tabla
+    function renderTable() {
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const pageInvoices = filteredInvoices.slice(startIndex, endIndex);
+      
+      invoicesTbody.innerHTML = '';
+      
+      if (pageInvoices.length === 0) {
+        invoicesTbody.innerHTML = `
+          <tr>
+            <td colspan="8" style="text-align: center; padding: 40px; color: #7f8c8d;">
+              📋 No se encontraron facturas que coincidan con los filtros aplicados
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      pageInvoices.forEach(invoice => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${invoice.number}</td>
+          <td>${invoice.supplier}</td>
+          <td>${formatDate(invoice.issueDate)}</td>
+          <td>${formatDate(invoice.dueDate)}</td>
+          <td>${formatCurrency(invoice.amount)}</td>
+          <td>${createStatusBadge(invoice.status)}</td>
+          <td>${invoice.category}</td>
+          <td>
+            <button class="action-btn btn-view" onclick="viewInvoice(${invoice.id})">👁️ Ver</button>
+            <button class="action-btn btn-edit" onclick="editInvoice(${invoice.id})">✏️ Editar</button>
+            <button class="action-btn btn-delete" onclick="deleteInvoice(${invoice.id})">🗑️ Eliminar</button>
+          </td>
+        `;
+        invoicesTbody.appendChild(row);
+      });
+      
+      updatePagination();
+    }
+    
+    // Función para actualizar paginación
+    function updatePagination() {
+      const totalPages = Math.ceil(filteredInvoices.length / itemsPerPage);
+      
+      prevPageBtn.disabled = currentPage === 1;
+      nextPageBtn.disabled = currentPage === totalPages || totalPages === 0;
+      
+      pageInfo.textContent = totalPages > 0 ? `Página ${currentPage} de ${totalPages}` : 'Sin resultados';
+    }
+    
+    // Función para aplicar filtros
+    function applyFilters() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const statusValue = statusFilter.value;
+      const categoryValue = categoryFilter.value;
+      
+      filteredInvoices = invoicesData.filter(invoice => {
+        const matchesSearch = !searchTerm || 
+          invoice.number.toLowerCase().includes(searchTerm) ||
+          invoice.supplier.toLowerCase().includes(searchTerm) ||
+          invoice.amount.toString().includes(searchTerm);
+        
+        const matchesStatus = !statusValue || invoice.status === statusValue;
+        const matchesCategory = !categoryValue || invoice.category === categoryValue;
+        
+        return matchesSearch && matchesStatus && matchesCategory;
+      });
+      
+      currentPage = 1;
+      renderTable();
+    }
+    
+    // Event listeners para filtros
+    searchInput.addEventListener('input', applyFilters);
+    statusFilter.addEventListener('change', applyFilters);
+    categoryFilter.addEventListener('change', applyFilters);
+    
+    // Limpiar filtros
+    clearFiltersBtn.addEventListener('click', function() {
+      searchInput.value = '';
+      statusFilter.value = '';
+      categoryFilter.value = '';
+      applyFilters();
+    });
+    
+    // Paginación
+    prevPageBtn.addEventListener('click', function() {
+      if (currentPage > 1) {
+        currentPage--;
+        renderTable();
+      }
+    });
+    
+    nextPageBtn.addEventListener('click', function() {
+      const totalPages = Math.ceil(filteredInvoices.length / itemsPerPage);
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderTable();
+      }
+    });
+    
+    // Exportar datos
+    exportBtn.addEventListener('click', function() {
+      // Aquí implementarías la lógica de exportación
+      alert('Funcionalidad de exportación en desarrollo');
+    });
+    
+    // Modal
+    closeModalBtn.addEventListener('click', function() {
+      invoiceModal.style.display = 'none';
+    });
+    
+    // Cerrar modal al hacer clic fuera
+    invoiceModal.addEventListener('click', function(e) {
+      if (e.target === invoiceModal) {
+        invoiceModal.style.display = 'none';
+      }
+    });
+    
+    // Funciones globales para acciones de tabla
+    window.viewInvoice = function(id) {
+      const invoice = invoicesData.find(inv => inv.id === id);
+      if (invoice) {
+        modalBody.innerHTML = `
+          <div style="display: grid; gap: 15px;">
+            <div><strong>Número:</strong> ${invoice.number}</div>
+            <div><strong>Proveedor:</strong> ${invoice.supplier}</div>
+            <div><strong>Fecha de Emisión:</strong> ${formatDate(invoice.issueDate)}</div>
+            <div><strong>Fecha de Vencimiento:</strong> ${formatDate(invoice.dueDate)}</div>
+            <div><strong>Monto:</strong> ${formatCurrency(invoice.amount)}</div>
+            <div><strong>Estado:</strong> ${createStatusBadge(invoice.status)}</div>
+            <div><strong>Categoría:</strong> ${invoice.category}</div>
+          </div>
+        `;
+        invoiceModal.style.display = 'flex';
+      }
+    };
+    
+    window.editInvoice = function(id) {
+      alert(`Editar factura ID: ${id} - Funcionalidad en desarrollo`);
+    };
+    
+    window.deleteInvoice = function(id) {
+      if (confirm('¿Estás seguro de que deseas eliminar esta factura?')) {
+        const index = invoicesData.findIndex(inv => inv.id === id);
+        if (index !== -1) {
+          invoicesData.splice(index, 1);
+          applyFilters();
+        }
+      }
+    };
+    
+    // Renderizar tabla inicial
+    renderTable();
+  });
+</script>
