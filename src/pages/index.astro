@@ -241,16 +241,11 @@ const mock = {
       <main class="content">
         <!-- Volvemos a la estructura original pero agregamos un script para activar el dashboard inicialmente -->
         <Dashboard />
-        <LoadBill />
-        <Invoices />
-        <Settings />
       </main>
     </div>
   </div>
 </body>
 <script>
-  // Importar utilidades
-  import '../scripts/utils.js';
   
   // Exponer datos mock al objeto window para que el navegador SPA pueda acceder
   (window as any).mockData = {
