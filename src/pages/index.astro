@@ -453,22 +453,6 @@ const mock = {
       "Débito Automático"
     ]
   };
-
-  // Importar y inicializar el navegador SPA cuando el DOM esté listo
-  document.addEventListener('DOMContentLoaded', async () => {
-    try {
-      // Importar el módulo de navegación
-      const { default: SPANavigator } = await import('../scripts/navigation.js');
-      
-      // Crear una instancia del navegador SPA
-      (window as any).spaNavigator = new SPANavigator();
-      
-      console.log('✅ Sistema de navegación SPA inicializado correctamente');
-      console.log('📊 Mock data loaded:', Object.keys((window as any).mockData));
-    } catch (error) {
-      console.error('❌ Error al inicializar el sistema de navegación:', error);
-    }
-  });
 </script>
 </html>
 
