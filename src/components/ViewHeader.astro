@@ -1,0 +1,35 @@
+--- 
+interface Props {
+  title: string;
+  icon: string;
+}
+
+const { title, icon } = Astro.props;
+---
+
+<div class="view-header">
+  <h1>
+    <img src={icon} alt={title} class="view-header-icon" />
+    {title}
+  </h1>
+</div>
+
+<style lang="stylus">
+  .view-header {
+    margin-bottom: 2rem;
+  }
+
+  .view-header h1 {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .view-header-icon {
+    width: 32px;
+    height: 32px;
+  }
+</style>

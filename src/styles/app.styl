@@ -1,17 +1,17 @@
 // Variables CSS
 :root
-  --bg-primary #2a2a2a
-  --bg-secondary #3a3a3a
-  --bg-card #454545
-  --text-primary #d0d0d0
-  --text-secondary #a8a8a8
-  --accent-primary #6b9bd1
-  --accent-hover #7ba3d6
-  --border-color #5a5a5a
-  --success-color #6b9b6b
-  --warning-color #d1a66b
-  --error-color #d17a7a
-  --table-hover #404040
+  --bg-primary #F5F5F5 // offWhite
+  --bg-secondary #FFFFFF // white
+  --bg-card #FFFFFF // white
+  --text-primary #333333 // dark grey
+  --text-secondary #666666 // medium grey
+  --accent-primary #FF8C00 // orange
+  --accent-hover #FFA500 // light orange
+  --border-color #E0E0E0 // light grey
+  --success-color #4CAF50 // green
+  --warning-color #FFC107 // amber
+  --error-color #F44336 // red
+  --table-hover #F0F0F0 // very light grey
 
 // Reset básico
 *
@@ -27,20 +27,23 @@ html, body
   overflow hidden
 
 body
-  background var(--bg-primary)
   color var(--text-primary)
   font-family 'Segoe UI', system-ui, sans-serif
   font-size 14px
   line-height 1.5
 
+.view-container
+  max-width 1200px
+  margin 0 auto
+  padding 2rem
+
 // Elementos base
-h1, h2, h3
+h2, h3
   color var(--text-primary)
   margin-bottom 1rem
 
-h1
-  font-size 1.5rem
-  font-weight 600
+
+
 
 h2
   font-size 1.3rem
@@ -76,8 +79,8 @@ button
   transition all 0.2s ease
   font-family inherit
 
-input, select
-  background var(--bg-card)
+input, select, textarea
+  background var(--bg-secondary)
   border 1px solid var(--border-color)
   color var(--text-primary)
   padding 0.5rem

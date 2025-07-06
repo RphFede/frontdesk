@@ -1,0 +1,130 @@
+---
+import ViewHeader from '../components/ViewHeader.astro';
+---
+<div class="view-container">
+
+  <ViewHeader title="Resumen General" icon="/svg/dollar.svg" />
+  
+  <div class="stats-grid">
+    <div class="bank-acc">
+      <h3>Fondo Permanente</h3>
+      <span class="number" id="total-amount">$0</span>
+      <span class="date">Año 2024</span>
+    </div>
+    <div class="bank-acc">
+      <h3>Agua y Saneamiento</h3>
+      <span class="number" id="total-amount">$0</span>
+      <span class="date">Año 2024</span>
+    </div>
+    <div class="bank-acc">
+      <h3>Alumbrado Público</h3>
+      <span class="number" id="total-amount">$0</span>
+      <span class="date">Año 2024</span>
+    </div>
+    <div class="bank-acc">
+      <h3>Obras Viales</h3>
+      <span class="number" id="total-amount">$0</span>
+      <span class="date">Año 2024</span>
+    </div>
+  </div>
+<!--
+    <div class="card">
+      <h3>Pendientes</h3>
+      <span class="number" id="pending-invoices">0</span>
+      <span class="date">Por autorizar</span>
+    </div>
+  </div>
+-->
+  
+  <div class="recent-invoices">
+    <h2>Facturas Recientes</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Proveedor</th>
+          <th>Monto</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="recent-invoices-tbody">
+        <tr>
+          <td colspan="5" class="no-data">Cargando facturas...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="pending">
+  <h2>Pendientes de autorización</h2>
+</div>
+
+<style lang="stylus">
+.stats-grid
+  display grid
+  grid-template-columns repeat(4, 1fr)
+  gap 1.5rem
+  margin-bottom 2rem
+
+  .bank-acc
+    background var(--bg-card)
+    padding 1.5rem
+    border-radius 8px
+    border 1px solid var(--border-color)
+    text-align center
+    transition all 0.3s ease
+    
+    &:hover
+      border-color var(--accent-primary)
+      transform translateY(-2px)
+    
+    h3
+      font-size 0.9rem
+      color var(--text-secondary)
+      margin-bottom 0.5rem
+      text-transform uppercase
+      letter-spacing 0.5px
+    
+    .number
+      display block
+      font-size 2rem
+      font-weight 700
+      color var(--accent-primary)
+      margin-bottom 0.25rem
+    
+    .date
+      font-size 0.8rem
+      color var(--text-secondary)
+
+section
+  margin-top 2rem
+  
+  h2
+    margin-bottom 1rem
+    color var(--text-primary)
+
+.status
+  padding 0.25rem 0.5rem
+  border-radius 4px
+  font-size 0.8rem
+  font-weight 500
+  
+  &.pending
+    background var(--warning-color)
+    color white
+  
+  &.paid
+    background var(--success-color)
+    color white
+
+.btn-sm
+  padding 0.25rem 0.5rem
+  background var(--accent-primary)
+  color white
+  border-radius 4px
+  font-size 0.8rem
+  
+  &:hover
+    background var(--accent-hover)
+</style>

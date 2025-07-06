@@ -1,24 +1,26 @@
 ---
+import ViewHeader from '../components/ViewHeader.astro';
 // Lógica del componente si es necesaria
 ---
 
-<div class="settings-container">
-  <h1>⚙️ Configuración del Sistema</h1>
+<div class="view-container">
+  
+  <ViewHeader title="Configuración" icon="/svg/settings.svg" />
   
   <div class="settings-grid">
     <!-- Configuración de Usuario -->
     <div class="settings-card">
       <h3>👤 Configuración de Usuario</h3>
       <form class="settings-form">
-        <div class="form-group">
+        <div class="group">
           <label for="username">Nombre de Usuario</label>
           <input type="text" id="username" value="Admin" readonly>
         </div>
-        <div class="form-group">
+        <div class="group">
           <label for="email">Email</label>
           <input type="email" id="email" value="admin@frontdesk.com">
         </div>
-        <div class="form-group">
+        <div class="group">
           <label for="theme">Tema de la Aplicación</label>
           <select id="theme">
             <option value="dark" selected>Oscuro</option>
@@ -26,7 +28,7 @@
             <option value="auto">Automático</option>
           </select>
         </div>
-        <button type="submit" class="btn btn-primary">💾 Guardar Cambios</button>
+        <button type="submit" class="btn primary">💾 Guardar Cambios</button>
       </form>
     </div>
     
@@ -34,11 +36,11 @@
     <div class="settings-card">
       <h3>🔧 Configuración del Sistema</h3>
       <form class="settings-form">
-        <div class="form-group">
+        <div class="group">
           <label for="company-name">Nombre de la Empresa</label>
           <input type="text" id="company-name" value="Municipalidad FrontDesk">
         </div>
-        <div class="form-group">
+        <div class="group">
           <label for="currency">Moneda</label>
           <select id="currency">
             <option value="CLP" selected>Peso Chileno (CLP)</option>
@@ -46,7 +48,7 @@
             <option value="EUR">Euro (EUR)</option>
           </select>
         </div>
-        <div class="form-group">
+        <div class="group">
           <label for="date-format">Formato de Fecha</label>
           <select id="date-format">
             <option value="DD/MM/YYYY" selected>DD/MM/YYYY</option>
@@ -54,7 +56,7 @@
             <option value="YYYY-MM-DD">YYYY-MM-DD</option>
           </select>
         </div>
-        <button type="submit" class="btn btn-primary">💾 Guardar Configuración</button>
+        <button type="submit" class="btn primary">💾 Guardar Configuración</button>
       </form>
     </div>
     
@@ -65,17 +67,17 @@
         <div class="action-item">
           <h4>Backup de Base de Datos</h4>
           <p>Crear una copia de seguridad de todos los datos</p>
-          <button class="btn btn-success">📦 Crear Backup</button>
+          <button class="btn success">📦 Crear Backup</button>
         </div>
         <div class="action-item">
           <h4>Limpiar Cache</h4>
           <p>Eliminar archivos temporales y cache del sistema</p>
-          <button class="btn btn-warning">🧹 Limpiar Cache</button>
+          <button class="btn warning">🧹 Limpiar Cache</button>
         </div>
         <div class="action-item">
           <h4>Exportar Configuración</h4>
           <p>Descargar archivo de configuración actual</p>
-          <button class="btn btn-primary">📤 Exportar Config</button>
+          <button class="btn primary">📤 Exportar Config</button>
         </div>
       </div>
     </div>
@@ -107,11 +109,8 @@
 
 <style lang="stylus">
 .settings-container
-  h1
-    color var(--text-primary)
-    margin-bottom 2rem
+  padding 2rem
 
-.settings-grid
   display grid
   grid-template-columns repeat(auto-fit, minmax(400px, 1fr))
   gap 1.5rem

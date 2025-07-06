@@ -34,7 +34,7 @@ class SPANavigator {
     this.navigateTo('dashboard'); // Vista por defecto
     this.isInitialized = true;
     
-    showToast('Sistema de navegación inicializado', 'success', 2000);
+    // showToast('Sistema de navegación inicializado', 'success', 2000);
   }
 
   /**
@@ -114,17 +114,23 @@ class SPANavigator {
    * @param {string} viewName - Nombre de la vista activa
    */
   updateActiveNavigation(viewName) {
-    // Remover clase activa de todos los botones
-    document.querySelectorAll('.icon-btn').forEach(btn => {
-      btn.classList.remove('active');
-    });
-
-    // Agregar clase activa al botón correspondiente
-    const activeButton = document.querySelector(`[data-target="${viewName}"]`);
-    if (activeButton) {
-      activeButton.classList.add('active');
+     // Remover clase activa de todos los wrappers de botones
+      document.querySelectorAll('.btn-layout').forEach(btn => {
+       const wrapper = btn.closest('.button-wrapper');
+       if (wrapper) {
+         wrapper.classList.remove('active');
+       }
+      });
+  
+     // Agregar clase activa al wrapper del botón correspondiente
+      const activeButton = document.querySelector(`[data-target="${viewName}"]`);
+      if (activeButton) {
+       const activeWrapper = activeButton.closest('.button-wrapper');
+       if (activeWrapper) {
+         activeWrapper.classList.add('active');
+       }
+      }
     }
-  }
 
   /**
    * Carga datos específicos para cada vista
@@ -159,7 +165,7 @@ class SPANavigator {
       this.updateRecentInvoices();
     } catch (error) {
       console.error('Error cargando datos del dashboard:', error);
-      showToast('Error al cargar datos del dashboard', 'error');
+      // showToast('Error al cargar datos del dashboard', 'error');
     }
   }
 
@@ -188,13 +194,13 @@ class SPANavigator {
       const recentInvoices = this.mockData.invoices.slice(0, 5);
       
       container.innerHTML = recentInvoices.map(invoice => `
-        <div class="invoice-item" data-invoice-id="${invoice.id}">
-          <div class="invoice-info">
+        <div class="item" data-invoice-id="${invoice.id}">
+          <div class="info">
             <h4>${invoice.supplierName}</h4>
             <p>Factura #${invoice.invoiceNumber}</p>
             <span class="date">${formatDate(invoice.issueDate)}</span>
           </div>
-          <div class="invoice-amount">
+          <div class="amount-section">
             <span class="amount">${formatCurrency(invoice.amount)}</span>
             <span class="status ${getStatusClass(invoice.status)}">${invoice.status}</span>
           </div>
@@ -202,7 +208,7 @@ class SPANavigator {
       `).join('');
 
       // Agregar event listeners para ver facturas
-      container.querySelectorAll('.invoice-item').forEach(item => {
+      container.querySelectorAll('.item').forEach(item => {
         item.addEventListener('click', (e) => {
           const invoiceId = e.currentTarget.dataset.invoiceId;
           this.viewInvoice(invoiceId);
@@ -210,7 +216,7 @@ class SPANavigator {
       });
     } catch (error) {
       console.error('Error cargando facturas recientes:', error);
-      showToast('Error al cargar facturas recientes', 'error');
+      // showToast('Error al cargar facturas recientes', 'error');
     }
   }
 
@@ -244,10 +250,10 @@ class SPANavigator {
       `).join('');
       
       this.hideLoadingState('invoices');
-      showToast(`${invoices.length} facturas cargadas`, 'success', 2000);
+      // showToast(`${invoices.length} facturas cargadas`, 'success', 2000);
     } catch (error) {
       console.error('Error cargando facturas:', error);
-      showToast('Error al cargar facturas', 'error');
+      // showToast('Error al cargar facturas', 'error');
       this.hideLoadingState('invoices');
     }
   }
@@ -289,10 +295,10 @@ class SPANavigator {
       }
       
       this.hideLoadingState('loadbill');
-      showToast('Formulario de carga listo', 'success', 2000);
+      // showToast('Formulario de carga listo', 'success', 2000);
     } catch (error) {
       console.error('Error cargando datos del formulario:', error);
-      showToast('Error al cargar formulario', 'error');
+      // showToast('Error al cargar formulario', 'error');
       this.hideLoadingState('loadbill');
     }
   }

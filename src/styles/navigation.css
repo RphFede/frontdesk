@@ -82,8 +82,8 @@
   background-color: #17a2b8;
 }
 
-/* Estilos para elementos de factura */
-.invoice-item {
+/* Estilos para elementos de lista */
+.item {
   padding: 16px;
   border: 1px solid #e9ecef;
   border-radius: 8px;
@@ -93,32 +93,32 @@
   background: white;
 }
 
-.invoice-item:hover {
+.item:hover {
   border-color: #007bff;
   box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
   transform: translateY(-1px);
 }
 
-.invoice-info {
+.info {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.invoice-info h4 {
+.info h4 {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
   color: #212529;
 }
 
-.invoice-info p {
+.info p {
   margin: 0;
   font-size: 14px;
   color: #6c757d;
 }
 
-.invoice-amount {
+.amount-section {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -131,7 +131,7 @@
   color: #28a745;
 }
 
-/* Estados de factura */
+/* Estados */
 .status {
   padding: 4px 8px;
   border-radius: 4px;
@@ -140,38 +140,38 @@
   text-transform: uppercase;
 }
 
-.status-pending {
+.pending {
   background-color: #fff3cd;
   color: #856404;
   border: 1px solid #ffeaa7;
 }
 
-.status-paid {
+.paid {
   background-color: #d4edda;
   color: #155724;
   border: 1px solid #c3e6cb;
 }
 
-.status-overdue {
+.overdue {
   background-color: #f8d7da;
   color: #721c24;
   border: 1px solid #f5c6cb;
 }
 
-.status-cancelled {
+.cancelled {
   background-color: #e2e3e5;
   color: #383d41;
   border: 1px solid #d6d8db;
 }
 
-.status-processing {
+.processing {
   background-color: #cce7ff;
   color: #004085;
   border: 1px solid #b3d7ff;
 }
 
 /* Botones de acción */
-.btn-view, .btn-edit {
+.view, .edit {
   padding: 6px 12px;
   border: none;
   border-radius: 4px;
@@ -182,22 +182,22 @@
   margin-left: 4px;
 }
 
-.btn-view {
+.view {
   background-color: #007bff;
   color: white;
 }
 
-.btn-view:hover {
+.view:hover {
   background-color: #0056b3;
   transform: translateY(-1px);
 }
 
-.btn-edit {
+.edit {
   background-color: #28a745;
   color: white;
 }
 
-.btn-edit:hover {
+.edit:hover {
   background-color: #1e7e34;
   transform: translateY(-1px);
 }
@@ -214,11 +214,11 @@
     transform: translateY(0);
   }
   
-  .invoice-item {
+  .item {
     padding: 12px;
   }
   
-  .invoice-info h4 {
+  .info h4 {
     font-size: 14px;
   }
   
@@ -244,18 +244,18 @@
 }
 
 /* Estados de formulario */
-.form-loading {
+.form.loading {
   position: relative;
 }
 
-.form-loading input,
-.form-loading select,
-.form-loading textarea {
+.form.loading input,
+.form.loading select,
+.form.loading textarea {
   background-color: #f8f9fa;
   pointer-events: none;
 }
 
-.form-loading::after {
+.form.loading::after {
   content: 'Cargando...';
   position: absolute;
   top: 50%;

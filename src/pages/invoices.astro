@@ -1,9 +1,10 @@
 ---
-// Lógica del componente si es necesaria
+import ViewHeader from '../components/ViewHeader.astro';
 ---
+<div class="view-container">
+  
+  <ViewHeader title="Listado de Facturas" icon="/svg/bill-list.svg" />
 
-<div class="invoices-container">
-  <h1>🧾 Listado de Facturas</h1>
   <p class="subtitle">Busca y gestiona las facturas registradas en el sistema</p>
   
   <div class="toolbar">
@@ -80,12 +81,7 @@
     margin: 0 auto;
   }
   
-  h1 {
-    color: #2c3e50;
-    margin-bottom: 10px;
-    font-size: 28px;
-    font-weight: 600;
-  }
+
   
   .subtitle {
     color: #7f8c8d;
@@ -99,10 +95,9 @@
     align-items: center;
     margin-bottom: 25px;
     padding: 20px;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--bg-secondary);
     border-radius: 12px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--border-color);
   }
   
   .left {
@@ -169,10 +164,9 @@
   }
   
   .table-container {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--bg-secondary);
     border-radius: 12px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--border-color);
     overflow: hidden;
     margin-bottom: 20px;
   }
@@ -183,7 +177,7 @@
   }
   
   thead {
-    background: rgba(52, 152, 219, 0.1);
+    background: transparent;
   }
   
   th {

@@ -1,10 +1,11 @@
 ---
+import ViewHeader from '../components/ViewHeader.astro';
 // Componente dedicado exclusivamente a la carga de nuevas facturas
 ---
 
-<div class="loadbill-container">
-  <h1>📤 Cargar Nueva Factura</h1>
-  <p class="subtitle">Registra una nueva factura en el sistema</p>
+<div class="view-container">
+
+  <ViewHeader title="Cargar Factura" icon="/svg/bill.svg" />
   
   <div class="form-section">
     <form id="loadbill-form">
@@ -112,7 +113,7 @@
       </fieldset>
 
       <!-- Botones de Acción -->
-      <div class="form-actions">
+      <div class="actions">
         <button type="button" class="secondary" id="cancel-btn">❌ Cancelar</button>
         <button type="button" class="primary" id="save-draft-btn">💾 Guardar Borrador</button>
         <button type="submit" class="success" id="submit-btn">✅ Registrar Factura</button>
@@ -122,23 +123,9 @@
 </div>
 
 <style lang="stylus">
-.loadbill-container
-  max-width 1200px
-  margin 0 auto
-  padding 2rem
-  
-  h1
-    color var(--text-primary)
-    margin-bottom 0.5rem
-    font-size 2rem
-    
-  .subtitle
-    color var(--text-secondary)
-    margin-bottom 2rem
-    font-size 1.1rem
 
 .form-section
-  background var(--bg-card)
+  background var(--bg-secondary)
   border-radius 12px
   border 1px solid var(--border-color)
   padding 2rem
@@ -149,7 +136,7 @@ fieldset
   border-radius 8px
   padding 1.5rem
   margin-bottom 2rem
-  background rgba(255, 255, 255, 0.02)
+  background transparent
   
   legend
     padding 0 1rem
@@ -337,5 +324,7 @@ fieldset
       // Aquí se guardaría como borrador
       alert('💾 Borrador guardado exitosamente');
     });
+  });
+</script> });
   });
 </script>

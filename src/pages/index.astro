@@ -1,11 +1,10 @@
 ---
-const { title } = Astro.props;
 import '../styles/app.styl';
 import '../styles/navigation.css';
 import Dashboard from '../views/Dashboard.astro';
-import Invoices from '../views/Invoices.astro';
-import LoadBill from '../views/LoadBill.astro';
-import Settings from '../views/Settings.astro';
+import Invoices from './invoices.astro';
+import LoadBill from './loadbill.astro';
+import Settings from './settings.astro';
 import Navigation from '../components/Navigation.astro';
 
 // Mock data para probar la funcionalidad de la aplicación
@@ -227,22 +226,15 @@ const mock = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{title}</title>
+  <title>Frontdesk</title>
   <meta name="theme-color" content="#2a2a2a">
 </head>
 <body>
   <div class="app-container">
-    <header>
-      <h1>Sistema de Gestión de Facturas</h1>
-      <div class="user-info">
-        👤 Usuario: Admin | 🕒 Última sesión: Hoy 14:30
-      </div>
-    </header>
-    
-    <div class="main-layout">
-      <aside class="sidebar">
-          <Navigation />
-      </aside>
+
+    <div class="main-layout"> 
+
+      <Navigation />
       
       <main class="content">
         <section id="dashboard-view" class="view active">
@@ -262,10 +254,6 @@ const mock = {
         </section>
       </main>
     </div>
-    
-    <footer>
-      <p>© 2023 FrontDesk. Todos los derechos reservados.</p>
-    </footer>
   </div>
 </body>
 <script>
@@ -579,19 +567,6 @@ const mock = {
     flex 1
     height calc(100vh - 140px) // Resta la altura del header y footer
     
-  .sidebar
-    background var(--bg-secondary)
-    width 10rem
-    display flex
-    flex-direction column
-    border-right 1px solid var(--border-color)
-    
-    @media (max-width: 768px)
-      width 200px
-      
-    @media (max-width: 640px)
-      display none
-    
   .content
     flex 1
     padding 2rem
@@ -600,19 +575,11 @@ const mock = {
 
   .view
     display none
+    background linear-gradient(#87CEEB, #ADD8E6)
     
     &.active
       display block
       animation fadeIn 0.3s ease-in-out
-  
-  footer
-    padding 1rem 2rem
-    background var(--bg-card)
-    border-top 1px solid var(--border-color)
-    text-align center
-    color var(--text-secondary)
-    font-size 0.8rem
-    flex-shrink 0
   
   @keyframes fadeIn
     from
