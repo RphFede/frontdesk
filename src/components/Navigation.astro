@@ -47,7 +47,7 @@ const gradientMapping: Record<string, string> = {
           type="button"
           class={`btn-layout ${item.customClass || ""}`}
           aria-label={item.label}
-          data-target={item.target}
+          onclick={`showView('${item.target}')`}
         >
           <div class="icon-wrapper">
             <span class="btn-layout__back"></span>
@@ -67,6 +67,10 @@ const gradientMapping: Record<string, string> = {
       </div>
     ))}
 </nav>
+
+<script>
+ 
+</script>
 
 <style lang="stylus">
 nav
