@@ -1,35 +1,35 @@
 ---
-// Lógica del componente si es necesaria
+import ViewHeader from '../components/ViewHeader.astro';
 ---
 
-<div>
-  <h1>📊 Resumen General</h1>
-  
-  <div class="stats-grid">
-    <div class="card">
-      <h3>Total Facturas</h3>
-      <span class="number" id="total-invoices">0</span>
-      <span class="date">Este mes</span>
-    </div>
-    <div class="card">
-      <h3>Monto Total</h3>
-      <span class="number" id="total-amount">$0</span>
-      <span class="date">Año 2024</span>
-    </div>
-    <div class="card">
-      <h3>Pendientes</h3>
-      <span class="number" id="pending-invoices">0</span>
-      <span class="date">Por autorizar</span>
-    </div>
-    <div class="card">
-      <h3>Proveedores</h3>
-      <span class="number" id="total-suppliers">0</span>
-      <span class="date">Activos</span>
-    </div>
+<section id="dashboard-view" class="view">
+
+  <ViewHeader title="Resumen General" icon="/svg/dollar.svg" />
+
+  <div class="bank-resume">
+    <h2>Resumen de cuentas</h2>
+    <div class="bank-accounts">
+      <div class="bank-account">
+        <h3>Fondo Permanente</h3>
+        <span class="number" id="total-amount">$0</span>
+      </div>
+      <div class="bank-account">
+      <h3>Agua y Saneamiento</h3>
+       <span class="number" id="total-amount">$0</span>
+      </div>
+      <div class="bank-account">
+       <h3>Alumbrado Público</h3>
+       <span class="number" id="total-amount">$0</span>
+      </div>
+      <div class="bank-account">
+        <h3>Obras Viales</h3>
+        <span class="number" id="total-amount">$0</span>
+      </div>
+    <div>
   </div>
   
-  <section class="recent-invoices">
-    <h2>📋 Facturas Recientes</h2>
+  <div class="recent">
+    <h2>Facturas Recientes</h2>
     <table>
       <thead>
         <tr>
@@ -40,33 +40,34 @@
           <th>Acciones</th>
         </tr>
       </thead>
-      <tbody id="recent-invoices-tbody">
-        <tr>
-          <td colspan="5" class="no-data">Cargando facturas...</td>
-        </tr>
+      <tbody id="recent-tbody">
+       <tr>
+        <td colspan="5" class="no-data">Cargando facturas...</td>
+       </tr>
       </tbody>
     </table>
-  </section>
-</div>
+  </div>
+
+</section>
 
 <style lang="stylus">
-.stats-grid
-  display grid
-  grid-template-columns repeat(4, 1fr)
+
+.bank-resume
+  display flex
+  flex-direction column
+
+.bank-accounts
+  display flex
+  flex-direction row
   gap 1.5rem
   margin-bottom 2rem
 
-  .card
+  .bank-account
     background var(--bg-card)
     padding 1.5rem
     border-radius 8px
     border 1px solid var(--border-color)
     text-align center
-    transition all 0.3s ease
-    
-    &:hover
-      border-color var(--accent-primary)
-      transform translateY(-2px)
     
     h3
       font-size 0.9rem
@@ -86,7 +87,9 @@
       font-size 0.8rem
       color var(--text-secondary)
 
-section
+.recent
+  display flex
+  flex-direction column
   margin-top 2rem
   
   h2

@@ -3,10 +3,9 @@ import ViewHeader from '../components/ViewHeader.astro';
 // Lógica del componente si es necesaria
 ---
 
-<div class="view-container">
-  
+<section id="settings-view" class="view">
   <ViewHeader title="Configuración" icon="/svg/settings.svg" />
-  
+<div class="view-container">  
   <div class="settings-grid">
     <!-- Configuración de Usuario -->
     <div class="settings-card">
@@ -106,6 +105,7 @@ import ViewHeader from '../components/ViewHeader.astro';
     </div>
   </div>
 </div>
+</section>
 
 <style lang="stylus">
 .settings-container

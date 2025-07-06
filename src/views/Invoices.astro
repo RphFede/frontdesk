@@ -1,12 +1,11 @@
 ---
 import ViewHeader from '../components/ViewHeader.astro';
 ---
-<div class="view-container">
-  
+
+<section id="invoices-view" class="view">
   <ViewHeader title="Listado de Facturas" icon="/svg/bill-list.svg" />
 
-  <p class="subtitle">Busca y gestiona las facturas registradas en el sistema</p>
-  
+<div class="view-container">  
   <div class="toolbar">
     <div class="left">
       <input type="text" id="search-input" placeholder="🔍 Buscar por proveedor, número de factura, monto...">
@@ -72,7 +71,7 @@ import ViewHeader from '../components/ViewHeader.astro';
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <style>
   .invoices-container {

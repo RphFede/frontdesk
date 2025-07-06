@@ -3,10 +3,11 @@ import ViewHeader from '../components/ViewHeader.astro';
 // Componente dedicado exclusivamente a la carga de nuevas facturas
 ---
 
-<div class="view-container">
+<section id="loadbill-view" class="view">
 
   <ViewHeader title="Cargar Factura" icon="/svg/bill.svg" />
-  
+
+<div class="view-container">  
   <div class="form-section">
     <form id="loadbill-form">
       <!-- Información del Proveedor -->
@@ -121,6 +122,7 @@ import ViewHeader from '../components/ViewHeader.astro';
     </form>
   </div>
 </div>
+</section>
 
 <style lang="stylus">
 

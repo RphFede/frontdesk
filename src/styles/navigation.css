@@ -171,7 +171,7 @@
 }
 
 /* Botones de acción */
-.view, .edit {
+.btn-view, .edit {
   padding: 6px 12px;
   border: none;
   border-radius: 4px;
@@ -182,12 +182,12 @@
   margin-left: 4px;
 }
 
-.view {
+.btn-view {
   background-color: #007bff;
   color: white;
 }
 
-.view:hover {
+.btn-view:hover {
   background-color: #0056b3;
   transform: translateY(-1px);
 }

@@ -1,11 +1,11 @@
 ---
 import '../styles/app.styl';
 import '../styles/navigation.css';
-import Dashboard from '../views/Dashboard.astro';
-import Invoices from './invoices.astro';
-import LoadBill from './loadbill.astro';
-import Settings from './settings.astro';
-import Navigation from '../components/Navigation.astro';
+import Dashboard from './views/Home.astro';
+import Invoices from './views/Invoices.astro';
+import LoadBill from './views/LoadBill.astro';
+import Settings from './views/Settings.astro';
+import Navigation from './components/Navigation.astro';
 
 // Mock data para probar la funcionalidad de la aplicación
 const mock = {
@@ -237,21 +237,11 @@ const mock = {
       <Navigation />
       
       <main class="content">
-        <section id="dashboard-view" class="view active">
-          <Dashboard />
-        </section>
-
-        <section id="loadbill-view" class="view">
-          <LoadBill />
-        </section>
-        
-        <section id="invoices-view" class="view">
-          <Invoices />
-        </section>
-               
-        <section id="settings-view" class="view">
-          <Settings />
-        </section>
+        <!-- Volvemos a la estructura original pero agregamos un script para activar el dashboard inicialmente -->
+        <Home />
+        <LoadBill />
+        <Invoices />
+        <Settings />
       </main>
     </div>
   </div>
@@ -575,7 +565,6 @@ const mock = {
 
   .view
     display none
-    background linear-gradient(#87CEEB, #ADD8E6)
     
     &.active
       display block
