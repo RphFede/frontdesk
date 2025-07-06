@@ -17,14 +17,17 @@ if (typeof document !== 'undefined') {
  * Inicializa el sistema de navegación SPA
  */
 function initSPA() {
-  // Obtener la ruta actual de la URL
-  const currentPath = window.location.pathname.substring(1) || 'dashboard';
-  
-  // Mostrar la vista correspondiente a la ruta actual
-  showView(currentPath);
-  
-  // No agregamos el listener popstate aquí porque React Router DOM ya maneja los eventos de navegación
-  // window.addEventListener('popstate', handlePopState);
+  // Verificar que estamos en el cliente antes de acceder a APIs del navegador
+  if (typeof window !== 'undefined') {
+    // Obtener la ruta actual de la URL
+    const currentPath = window.location.pathname.substring(1) || 'dashboard';
+    
+    // Mostrar la vista correspondiente a la ruta actual
+    showView(currentPath);
+    
+    // No agregamos el listener popstate aquí porque React Router DOM ya maneja los eventos de navegación
+    // window.addEventListener('popstate', handlePopState);
+  }
 }
 
 /**
@@ -32,6 +35,11 @@ function initSPA() {
  * @param {string} viewName - Nombre de la vista a mostrar (dashboard, invoices, loadbill, settings)
  */
 function showView(viewName) {
+  // Verificar que estamos en el cliente antes de acceder a APIs del navegador
+  if (typeof document === 'undefined' || typeof window === 'undefined') {
+    return;
+  }
+  
   // Normalizar el nombre de la vista
   const target = viewName || 'dashboard';
   
@@ -65,15 +73,23 @@ function showView(viewName) {
  * @param {string} target - Nombre de la vista activa
  */
 function updateActiveNavButton(target) {
+  // Verificar que estamos en el cliente antes de acceder a APIs del navegador
+  if (typeof document === 'undefined') {
+    return;
+  }
+  
   // Eliminar la clase 'active' de todos los botones
   document.querySelectorAll('.button-wrapper').forEach(btn => {
     btn.classList.remove('active');
   });
   
   // Añadir la clase 'active' al botón correspondiente
-  const activeButton = document.querySelector(`.nav-${target}`).closest('.button-wrapper');
-  if (activeButton) {
-    activeButton.classList.add('active');
+  const activeButtonSelector = document.querySelector(`.nav-${target}`);
+  if (activeButtonSelector) {
+    const activeButton = activeButtonSelector.closest('.button-wrapper');
+    if (activeButton) {
+      activeButton.classList.add('active');
+    }
   }
 }
 
@@ -82,9 +98,14 @@ function updateActiveNavButton(target) {
  * @param {PopStateEvent} event - Evento popstate
  */
 function handlePopState(event) {
-  const path = window.location.pathname.substring(1) || 'dashboard';
-  showView(path);
+  // Verificar que estamos en el cliente antes de acceder a APIs del navegador
+  if (typeof window !== 'undefined') {
+    const path = window.location.pathname.substring(1) || 'dashboard';
+    showView(path);
+  }
 }
 
 // Exponer la función showView globalmente para que pueda ser utilizada por otros scripts
-window.showView = showView;
+if (typeof window !== 'undefined') {
+  window.showView = showView;
+}
