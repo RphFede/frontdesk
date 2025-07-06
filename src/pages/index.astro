@@ -8,9 +8,9 @@ import LoadBill from '../views/LoadBill.astro';
 import Settings from '../views/Settings.astro';
 
 import Navigation from '../components/Navigation.astro';
-import { AppRouter } from '../components/AppRouter.jsx';
+import pkg from 'react-router-dom';
+const { BrowserRouter, Routes, Route, Link} = pkg;
 
-// Mock data para probar la funcionalidad de la aplicación
 const mock = {
   // Datos de proveedores
   suppliers: [
