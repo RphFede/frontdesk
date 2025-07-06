@@ -8,6 +8,7 @@ import LoadBill from '../views/LoadBill.astro';
 import Settings from '../views/Settings.astro';
 
 import Navigation from '../components/Navigation.astro';
+import { AppRouter } from '../components/AppRouter.jsx';
 
 // Mock data para probar la funcionalidad de la aplicación
 const mock = {
@@ -237,10 +238,10 @@ const mock = {
     <div class="main-layout"> 
 
       <Navigation />
+      <AppRouter client:load />
       
       <main class="content">
         <!-- Volvemos a la estructura original pero agregamos un script para activar el dashboard inicialmente -->
-        <Dashboard />
       </main>
     </div>
   </div>
