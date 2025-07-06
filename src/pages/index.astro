@@ -7,7 +7,7 @@ import Invoices from '../views/Invoices.astro';
 import LoadBill from '../views/LoadBill.astro';
 import Settings from '../views/Settings.astro';
 
-import Navigation from '../components/Navigation.astro';
+import AppRouter from '../components/AppRouter.jsx';
 
 // Mock data para probar la funcionalidad de la aplicación
 const mock = {
@@ -234,18 +234,26 @@ const mock = {
 <body>
   <div class="app-container">
 
-    <div class="main-layout"> 
-
-      <Navigation />
-      
-      <main class="content">
+    <AppRouter client:load />
+    
+    <!-- Vistas Astro originales (ocultas inicialmente) -->
+    <div style="display: none;">
+      <div id="dashboard-view" class="view">
         <Dashboard />
-        <slot />
-      </main>
+      </div>
+      <div id="loadbill-view" class="view">
+        <LoadBill />
+      </div>
+      <div id="invoices-view" class="view">
+        <Invoices />
+      </div>
+      <div id="settings-view" class="view">
+        <Settings />
+      </div>
     </div>
   </div>
 </body>
-<script>
+<script src="../scripts/spa-init.js">
 </script>
 </html>
 
