@@ -12,6 +12,7 @@ export default defineConfig({
   },
   vite: {
     server: {
+      port: 4321
     },
     css: {
       preprocessorOptions: {
