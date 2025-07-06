@@ -1,7 +1,7 @@
 ---
 import '../styles/app.styl';
 import '../styles/navigation.css';
-import Dashboard from './views/Home.astro';
+import Dashboard from './views/Dashboard.astro';
 import Invoices from './views/Invoices.astro';
 import LoadBill from './views/LoadBill.astro';
 import Settings from './views/Settings.astro';
@@ -238,7 +238,7 @@ const mock = {
       
       <main class="content">
         <!-- Volvemos a la estructura original pero agregamos un script para activar el dashboard inicialmente -->
-        <Home />
+        <Dashboard />
         <LoadBill />
         <Invoices />
         <Settings />
