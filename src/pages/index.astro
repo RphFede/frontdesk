@@ -7,7 +7,7 @@ import Invoices from '../views/Invoices.astro';
 import LoadBill from '../views/LoadBill.astro';
 import Settings from '../views/Settings.astro';
 
-import AppRouter from '../components/AppRouter.jsx';
+import Navigation from '../components/Navigation.astro';
 
 // Mock data para probar la funcionalidad de la aplicación
 const mock = {
@@ -234,26 +234,241 @@ const mock = {
 <body>
   <div class="app-container">
 
-    <AppRouter client:load />
-    
-    <!-- Vistas Astro originales (ocultas inicialmente) -->
-    <div style="display: none;">
-      <div id="dashboard-view" class="view">
+    <div class="main-layout"> 
+
+      <Navigation />
+      
+      <main class="content">
+        <!-- Volvemos a la estructura original pero agregamos un script para activar el dashboard inicialmente -->
         <Dashboard />
-      </div>
-      <div id="loadbill-view" class="view">
         <LoadBill />
-      </div>
-      <div id="invoices-view" class="view">
         <Invoices />
-      </div>
-      <div id="settings-view" class="view">
         <Settings />
-      </div>
+      </main>
     </div>
   </div>
 </body>
-<script src="../scripts/spa-init.js">
+<script>
+  // Importar utilidades
+  import '../scripts/utils.js';
+  
+  // Exponer datos mock al objeto window para que el navegador SPA pueda acceder
+  (window as any).mockData = {
+    suppliers: [
+      {
+        id: 1,
+        companyName: "Constructora ABC S.A.",
+        rut: "12.345.678-9",
+        contactPerson: "Juan Pérez",
+        phone: "+56 9 1234 5678",
+        email: "contacto@abc.com",
+        category: "Construcción",
+        address: "Av. Principal 123, Santiago",
+        status: "Activo",
+        registrationDate: "2023-01-15"
+      },
+      {
+        id: 2,
+        companyName: "Suministros Municipales Ltda.",
+        rut: "98.765.432-1",
+        contactPerson: "María González",
+        phone: "+56 9 8765 4321",
+        email: "ventas@suministros.com",
+        category: "Suministros",
+        address: "Calle Comercio 456, Valparaíso",
+        status: "Activo",
+        registrationDate: "2023-03-22"
+      },
+      {
+        id: 3,
+        companyName: "Servicios Generales SRL",
+        rut: "55.666.777-8",
+        contactPerson: "Carlos Rodríguez",
+        phone: "+56 9 5555 6666",
+        email: "info@servicios.com",
+        category: "Servicios",
+        address: "Plaza Central 789, Concepción",
+        status: "Pendiente",
+        registrationDate: "2024-01-10"
+      },
+      {
+        id: 4,
+        companyName: "TechSolutions SpA",
+        rut: "11.222.333-4",
+        contactPerson: "Ana Silva",
+        phone: "+56 9 1111 2222",
+        email: "contacto@techsolutions.cl",
+        category: "Tecnología",
+        address: "Torre Empresarial, Piso 15, Las Condes",
+        status: "Activo",
+        registrationDate: "2023-08-05"
+      },
+      {
+        id: 5,
+        companyName: "Mantenimiento Integral Ltda.",
+        rut: "77.888.999-0",
+        contactPerson: "Roberto Morales",
+        phone: "+56 9 7777 8888",
+        email: "servicios@mantenimiento.cl",
+        category: "Mantenimiento",
+        address: "Sector Industrial 321, Antofagasta",
+        status: "Activo",
+        registrationDate: "2023-11-18"
+      }
+    ],
+    invoices: [
+      {
+        id: 1,
+        invoiceNumber: "FAC-2024-001",
+        supplierId: 1,
+        supplierName: "Constructora ABC S.A.",
+        amount: 45000,
+        currency: "CLP",
+        issueDate: "2024-01-25",
+        dueDate: "2024-02-25",
+        status: "Pendiente",
+        description: "Materiales de construcción para proyecto municipal",
+        category: "Construcción",
+        paymentMethod: "Transferencia",
+        taxAmount: 8550,
+        netAmount: 36450
+      },
+      {
+        id: 2,
+        invoiceNumber: "FAC-2024-002",
+        supplierId: 2,
+        supplierName: "Suministros Municipales Ltda.",
+        amount: 12500,
+        currency: "CLP",
+        issueDate: "2024-01-24",
+        dueDate: "2024-02-24",
+        status: "Pagada",
+        description: "Suministros de oficina y papelería",
+        category: "Suministros",
+        paymentMethod: "Cheque",
+        taxAmount: 2375,
+        netAmount: 10125
+      },
+      {
+        id: 3,
+        invoiceNumber: "FAC-2024-003",
+        supplierId: 4,
+        supplierName: "TechSolutions SpA",
+        amount: 85000,
+        currency: "CLP",
+        issueDate: "2024-01-23",
+        dueDate: "2024-02-23",
+        status: "Vencida",
+        description: "Licencias de software y soporte técnico",
+        category: "Tecnología",
+        paymentMethod: "Transferencia",
+        taxAmount: 16150,
+        netAmount: 68850
+      },
+      {
+        id: 4,
+        invoiceNumber: "FAC-2024-004",
+        supplierId: 5,
+        supplierName: "Mantenimiento Integral Ltda.",
+        amount: 28000,
+        currency: "CLP",
+        issueDate: "2024-01-22",
+        dueDate: "2024-02-22",
+        status: "Pagada",
+        description: "Mantenimiento preventivo de equipos",
+        category: "Mantenimiento",
+        paymentMethod: "Transferencia",
+        taxAmount: 5320,
+        netAmount: 22680
+      },
+      {
+        id: 5,
+        invoiceNumber: "FAC-2024-005",
+        supplierId: 3,
+        supplierName: "Servicios Generales SRL",
+        amount: 15750,
+        currency: "CLP",
+        issueDate: "2024-01-21",
+        dueDate: "2024-02-21",
+        status: "Pendiente",
+        description: "Servicios de limpieza y jardinería",
+        category: "Servicios",
+        paymentMethod: "Transferencia",
+        taxAmount: 2992.5,
+        netAmount: 12757.5
+      },
+      {
+        id: 6,
+        invoiceNumber: "FAC-2024-006",
+        supplierId: 1,
+        supplierName: "Constructora ABC S.A.",
+        amount: 120000,
+        currency: "CLP",
+        issueDate: "2024-01-20",
+        dueDate: "2024-02-20",
+        status: "Pagada",
+        description: "Reparación de infraestructura vial",
+        category: "Construcción",
+        paymentMethod: "Transferencia",
+        taxAmount: 22800,
+        netAmount: 97200
+      }
+    ],
+    stats: {
+      totalInvoices: 1247,
+      totalAmount: 2400000,
+      pendingInvoices: 23,
+      activeSuppliers: 156,
+      monthlyGrowth: 12.5,
+      averageInvoiceAmount: 35000,
+      topCategory: "Construcción",
+      paymentMethods: {
+        "Transferencia": 65,
+        "Cheque": 25,
+        "Efectivo": 10
+      }
+    },
+    categories: [
+      "Construcción",
+      "Suministros",
+      "Servicios",
+      "Mantenimiento",
+      "Tecnología",
+      "Transporte",
+      "Consultoría",
+      "Alimentación"
+    ],
+    invoiceStatuses: [
+      "Pendiente",
+      "Pagada",
+      "Vencida",
+      "Cancelada",
+      "En Proceso"
+    ],
+    paymentMethods: [
+      "Transferencia",
+      "Cheque",
+      "Efectivo",
+      "Tarjeta de Crédito",
+      "Débito Automático"
+    ]
+  };
+
+  // Importar y inicializar el navegador SPA cuando el DOM esté listo
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      // Importar el módulo de navegación
+      const { default: SPANavigator } = await import('../scripts/navigation.js');
+      
+      // Crear una instancia del navegador SPA
+      (window as any).spaNavigator = new SPANavigator();
+      
+      console.log('✅ Sistema de navegación SPA inicializado correctamente');
+      console.log('📊 Mock data loaded:', Object.keys((window as any).mockData));
+    } catch (error) {
+      console.error('❌ Error al inicializar el sistema de navegación:', error);
+    }
+  });
 </script>
 </html>
 
