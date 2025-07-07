@@ -1,13 +1,9 @@
----
-import ViewHeader from '../components/ViewHeader.astro';
----
-
 <section id="dashboard-view" class="view">
 
-  <ViewHeader title="Resumen General" icon="/svg/dollar.svg" />
+  <h1>Resumen General</h1>
 
   <div class="bank-resume">
-    <h2>Resumen de cuentas</h2>
+    <h2>Estado de cuentas</h2>
     <div class="bank-accounts">
       <div class="bank-account">
         <h3>Fondo Permanente</h3>
@@ -22,10 +18,11 @@ import ViewHeader from '../components/ViewHeader.astro';
        <span class="number" id="total-amount">$0</span>
       </div>
       <div class="bank-account">
-        <h3>Obras Viales</h3>
+        <h3>Inf. Vial y Desagües</h3>
         <span class="number" id="total-amount">$0</span>
       </div>
     <div>
+  </div>
   </div>
   
   <div class="recent">
@@ -33,9 +30,10 @@ import ViewHeader from '../components/ViewHeader.astro';
     <table>
       <thead>
         <tr>
-          <th>Fecha</th>
+          <th>Prog.</th>
           <th>Proveedor</th>
           <th>Monto</th>
+          <th>Fecha</th>
           <th>Estado</th>
           <th>Acciones</th>
         </tr>
@@ -52,21 +50,20 @@ import ViewHeader from '../components/ViewHeader.astro';
 
 <style lang="stylus">
 
-.bank-resume
+section
   display flex
   flex-direction column
 
 .bank-accounts
   display flex
   flex-direction row
+  justify-content space-evenly
   gap 1.5rem
   margin-bottom 2rem
 
   .bank-account
-    background var(--bg-card)
+    background transparent
     padding 1.5rem
-    border-radius 8px
-    border 1px solid var(--border-color)
     text-align center
     
     h3
@@ -88,8 +85,6 @@ import ViewHeader from '../components/ViewHeader.astro';
       color var(--text-secondary)
 
 .recent
-  display flex
-  flex-direction column
   margin-top 2rem
   
   h2

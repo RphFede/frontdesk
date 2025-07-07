@@ -1,15 +1,15 @@
 ---
 import '../styles/app.styl';
 import '../styles/navigation.css';
+import ClientRouter from 'astro:transitions';
 
-import Dashboard from '../views/Dashboard.astro';
-import Invoices from '../views/Invoices.astro';
-import LoadBill from '../views/LoadBill.astro';
-import Settings from '../views/Settings.astro';
+import Dashboard from './dashboard.astro';
+import Invoices from './invoices.astro';
+import LoadBill from './loadBill.astro';
+import Settings from './settings.astro';
 
 import Navigation from '../components/Navigation.astro';
-import pkg from 'react-router-dom';
-const { BrowserRouter, Routes, Route, Link} = pkg;
+import { TransitionBeforeSwapEvent } from 'astro/virtual-modules/transitions-events.js';
 
 const mock = {
   // Datos de proveedores
@@ -231,17 +231,19 @@ const mock = {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Frontdesk</title>
   <meta name="theme-color" content="#2a2a2a">
+  <meta name="view-transition" content="same-origin" />
 </head>
 <body>
   <div class="app-container">
 
     <div class="main-layout"> 
 
+     <!--  <Navigation /> -->
       <Navigation />
-      <AppRouter client:load />
       
       <main class="content">
-        <!-- Volvemos a la estructura original pero agregamos un script para activar el dashboard inicialmente -->
+        <Settings />
+        <slot />
       </main>
     </div>
   </div>

@@ -1,21 +1,14 @@
----
-import ViewHeader from '../components/ViewHeader.astro';
-// Componente dedicado exclusivamente a la carga de nuevas facturas
----
-
 <section id="loadbill-view" class="view">
-
-  <ViewHeader title="Cargar Factura" icon="/svg/bill.svg" />
 
 <div class="view-container">  
   <div class="form-section">
     <form id="loadbill-form">
       <!-- Información del Proveedor -->
       <fieldset>
-        <legend>🏢 Información del Proveedor</legend>
+        <legend>🏢 Información de proveedor</legend>
         <div class="row">
           <div class="group">
-            <label for="supplier">Proveedor *</label>
+            <label for="supplier">Razón Social *</label>
             <select id="supplier" required>
               <option value="">Seleccionar proveedor...</option>
               <option value="1">Constructora ABC S.A.</option>
@@ -26,98 +19,51 @@ import ViewHeader from '../components/ViewHeader.astro';
             </select>
           </div>
           <div class="group">
-            <label for="supplier-rut">RUT del Proveedor</label>
+            <label for="supplier-rut">CUIT</label>
             <input type="text" id="supplier-rut" placeholder="12.345.678-9" readonly>
           </div>
+          <div class="group">
+            <label for="add-supplier">Agregar Nuevo</label>
+            <button type="button" id="add-supplier">+</button>
+          </div>          
         </div>
       </fieldset>
 
       <!-- Información de la Factura -->
       <fieldset>
-        <legend>📄 Datos de la Factura</legend>
+        <legend>📄 Datos de factura</legend>
         <div class="row">
           <div class="group">
-            <label for="invoice-number">Número de Factura *</label>
-            <input type="text" id="invoice-number" placeholder="Ej: FAC-2024-001" required>
+            <label for="classification">Clasificación *</label>
+            <select id="classification" required>
+              <option value="">Seleccionar clasificación...</option>
+              <option value="consumer goods">Consumo</option>
+              <option value="services">Servicio</option>
+              <option value="capital goods">Capital</option>
+            </select>
+          </div>
+          <div class="group">
+            <label for="invoice-number">Nro. Factura *</label>
+            <input type="text" id="invoice-number" placeholder="Ej: B-00001-01234" required>
           </div>
           <div class="group">
             <label for="invoice-date">Fecha de Emisión *</label>
             <input type="date" id="invoice-date" required>
-          </div>
-          <div class="group">
-            <label for="due-date">Fecha de Vencimiento *</label>
-            <input type="date" id="due-date" required>
           </div>
         </div>
         
         <div class="row">
           <div class="group">
             <label for="description">Descripción *</label>
-            <textarea id="description" placeholder="Describe los productos o servicios facturados..." required></textarea>
-          </div>
-        </div>
-      </fieldset>
-
-      <!-- Información Financiera -->
-      <fieldset>
-        <legend>💰 Información Financiera</legend>
-        <div class="row">
-          <div class="group">
-            <label for="net-amount">Monto Neto *</label>
-            <input type="number" id="net-amount" placeholder="0.00" step="0.01" required>
-          </div>
-          <div class="group">
-            <label for="tax-amount">IVA (19%)</label>
-            <input type="number" id="tax-amount" placeholder="0.00" step="0.01" readonly>
-          </div>
-          <div class="group">
-            <label for="total-amount">Monto Total</label>
-            <input type="number" id="total-amount" placeholder="0.00" step="0.01" readonly>
-          </div>
-        </div>
-        
-        <div class="row">
-          <div class="group">
-            <label for="category">Categoría *</label>
-            <select id="category" required>
-              <option value="">Seleccionar categoría...</option>
-              <option value="Construcción">Construcción</option>
-              <option value="Suministros">Suministros</option>
-              <option value="Servicios">Servicios</option>
-              <option value="Mantenimiento">Mantenimiento</option>
-              <option value="Tecnología">Tecnología</option>
-              <option value="Transporte">Transporte</option>
-              <option value="Consultoría">Consultoría</option>
-              <option value="Alimentación">Alimentación</option>
-            </select>
-          </div>
-          <div class="group">
-            <label for="payment-method">Método de Pago *</label>
-            <select id="payment-method" required>
-              <option value="">Seleccionar método...</option>
-              <option value="Transferencia">Transferencia</option>
-              <option value="Cheque">Cheque</option>
-              <option value="Efectivo">Efectivo</option>
-              <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
-              <option value="Débito Automático">Débito Automático</option>
-            </select>
-          </div>
-          <div class="group">
-            <label for="currency">Moneda</label>
-            <select id="currency">
-              <option value="CLP" selected>CLP (Peso Chileno)</option>
-              <option value="USD">USD (Dólar)</option>
-              <option value="EUR">EUR (Euro)</option>
-            </select>
+            <textarea id="description" placeholder="Descripción de bien o servicio..." required></textarea>
           </div>
         </div>
       </fieldset>
 
       <!-- Botones de Acción -->
       <div class="actions">
-        <button type="button" class="secondary" id="cancel-btn">❌ Cancelar</button>
-        <button type="button" class="primary" id="save-draft-btn">💾 Guardar Borrador</button>
-        <button type="submit" class="success" id="submit-btn">✅ Registrar Factura</button>
+        <button type="button" class="clean" id="clean-btn">❌ Limpiar valores</button>
+        <button type="submit" class="submit" id="submit-btn">✅ Registrar factura</button>
       </div>
     </form>
   </div>
@@ -211,16 +157,11 @@ fieldset
     font-size 1rem
     cursor pointer
     transition all 0.2s ease
-    
-    &.secondary
-      background var(--bg-secondary)
-      color var(--text-primary)
-      border 1px solid var(--border-color)
       
       &:hover
         background var(--bg-hover)
     
-    &.primary
+    &.clean
       background var(--accent-primary)
       color white
       
@@ -228,7 +169,7 @@ fieldset
         background var(--accent-hover)
         transform translateY(-1px)
     
-    &.success
+    &.submit
       background var(--success-color)
       color white
       

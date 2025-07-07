@@ -1,10 +1,8 @@
----
-import ViewHeader from '../components/ViewHeader.astro';
-// Lógica del componente si es necesaria
----
 
 <section id="settings-view" class="view">
-  <ViewHeader title="Configuración" icon="/svg/settings.svg" />
+
+  <h1>Configuración</h1>
+
 <div class="view-container">  
   <div class="settings-grid">
     <!-- Configuración de Usuario -->
@@ -28,34 +26,6 @@ import ViewHeader from '../components/ViewHeader.astro';
           </select>
         </div>
         <button type="submit" class="btn primary">💾 Guardar Cambios</button>
-      </form>
-    </div>
-    
-    <!-- Configuración del Sistema -->
-    <div class="settings-card">
-      <h3>🔧 Configuración del Sistema</h3>
-      <form class="settings-form">
-        <div class="group">
-          <label for="company-name">Nombre de la Empresa</label>
-          <input type="text" id="company-name" value="Municipalidad FrontDesk">
-        </div>
-        <div class="group">
-          <label for="currency">Moneda</label>
-          <select id="currency">
-            <option value="CLP" selected>Peso Chileno (CLP)</option>
-            <option value="USD">Dólar Americano (USD)</option>
-            <option value="EUR">Euro (EUR)</option>
-          </select>
-        </div>
-        <div class="group">
-          <label for="date-format">Formato de Fecha</label>
-          <select id="date-format">
-            <option value="DD/MM/YYYY" selected>DD/MM/YYYY</option>
-            <option value="MM/DD/YYYY">MM/DD/YYYY</option>
-            <option value="YYYY-MM-DD">YYYY-MM-DD</option>
-          </select>
-        </div>
-        <button type="submit" class="btn primary">💾 Guardar Configuración</button>
       </form>
     </div>
     

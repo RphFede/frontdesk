@@ -1,9 +1,11 @@
 ---
+
 interface NavigationItem {
   icon: string;
   label: string;
   customClass?: string;
   target?: string;
+  href: string;
 }
 
 const navigationItems: NavigationItem[] = [
@@ -11,61 +13,67 @@ const navigationItems: NavigationItem[] = [
     icon: "/svg/dollar.svg",
     label: "Resumen",
     customClass: "nav-dashboard",
-    target: "dashboard"
+    target: "dashboard",
+    href: "/dashboard"
   },
   {
     icon: "/svg/bill.svg",
     label: "Cargar Factura",
     customClass: "nav-loadbill",
-    target: "loadbill"
+    target: "loadbill",
+    href: "/loadbill"
   },
   {
     icon: "/svg/bill-list.svg",
     label: "Listado de facturas",
     customClass: "nav-invoices",
-    target: "invoices"
+    target: "invoices",
+    href: "/invoices"
   },
   {
     icon: "/svg/settings.svg",
     label: "Configuración",
     customClass: "nav-settings",
-    target: "settings"
+    href: "/settings"
   }
 ];
 
 const gradientMapping: Record<string, string> = {
-  orange: "linear-gradient(#FF8C00, #FFA500)",
-  lightBlue: "linear-gradient(#87CEEB, #ADD8E6)",
+  orange: "linear-gradient(90deg, #FF8C00, #FFA500)",
+  lightBlue: "linear-gradient(90deg, #87CEEB, #ADD8E6)",
   offWhite: "#F5F5F5"
 };
 ---
 
 <nav>
-    {navigationItems.map((item) => (
-      <div class="button-wrapper">
-        <button
-          type="button"
-          class={`btn-layout ${item.customClass || ""}`}
-          aria-label={item.label}
-          data-target={item.target}
+  {navigationItems.map((item) => (
+    <a
+      href={item.href}
+      class="button-wrapper"
+      aria-label={item.label}
+      data-target={item.target}
+      >
+      <button
+        type="button"
+        class={`btn-layout ${item.customClass || ""}`}
         >
-          <div class="icon-wrapper">
-            <span class="btn-layout__back"></span>
-            <span class="btn-layout__front">
-              <span class="btn-layout__icon" aria-hidden="true">
-                <img 
-                  src={item.icon} 
-                  alt={item.label} 
-                  width="24" 
-                  height="24" 
-                />
-              </span>
-            </span> 
-          </div>
-          <span class="btn-label">{item.label}</span>
-        </button>
-      </div>
-    ))}
+        <div class="icon-wrapper">
+          <span class="btn-layout__back"></span>
+          <span class="btn-layout__front">
+            <span class="btn-layout__icon" aria-hidden="true">
+              <img
+                src={item.icon}
+                alt={item.label}
+                width="24"
+                height="24"
+              />
+            </span>
+          </span>
+        </div>
+        <span class="btn-label">{item.label}</span>
+      </button>
+    </a>
+  ))}
 </nav>
 
 <style lang="stylus">
@@ -83,6 +91,9 @@ nav
       
   @media (max-width: 640px)
     display none
+
+a
+  text-decoration none
 
 .button-wrapper
   display flex
