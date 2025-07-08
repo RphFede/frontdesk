@@ -69,6 +69,50 @@
   </div>
 </div>
 </section>
+<script>
+document.getElementById('loadbill-form').addEventListener('submit', async function(event) {
+  event.preventDefault();
+
+  const supplierSelect = document.getElementById('supplier');
+  const supplier = supplierSelect.options[supplierSelect.selectedIndex].text;
+  const supplierValue = supplierSelect.value;
+  const supplierRut = document.getElementById('supplier-rut').value;
+  const classification = document.getElementById('classification').value;
+  const invoiceNumber = document.getElementById('invoice-number').value;
+  const invoiceDate = document.getElementById('invoice-date').value;
+  const description = document.getElementById('description').value;
+
+  const invoiceData = {
+    supplier: supplier,
+    supplier_rut: supplierRut,
+    classification: classification,
+    invoice_number: invoiceNumber,
+    invoice_date: invoiceDate,
+    description: description
+  };
+
+  try {
+    const response = await fetch('http://localhost:5000/invoices', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(invoiceData)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      alert('Error: ' + errorData.error);
+      return;
+    }
+
+    alert('Invoice registered successfully!');
+    this.reset();
+  } catch (error) {
+    alert('Failed to submit invoice: ' + error.message);
+  }
+});
+</script>
 
 <style lang="stylus">
 
