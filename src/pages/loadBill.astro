@@ -1,3 +1,7 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro"
+---
+<BaseLayout>
 <section id="loadbill-view" class="view">
 
 <div class="view-container">  
@@ -69,6 +73,8 @@
   </div>
 </div>
 </section>
+</BaseLayout>
+
 <script>
 document.getElementById('loadbill-form').addEventListener('submit', async function(event) {
   event.preventDefault();

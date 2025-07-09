@@ -1,26 +1,46 @@
 ---
-// src/layouts/MainLayout.astro
-import { ClientRouter } from 'astro:transitions';
+import '../styles/app.styl';
+import '../styles/navigation.css';
+import ClientRouter from 'astro:transitions';
+
+import Index from '../pages/index.astro';
+import Invoices from '../pages/invoices.astro';
+import LoadBill from '../pages/loadBill.astro';
+import Settings from '../pages/settings.astro';
 
 import Navigation from '../components/Navigation.astro';
+import { TransitionBeforeSwapEvent } from 'astro/virtual-modules/transitions-events.js';
 ---
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frontdesk App</title>
-    <ClientRouter />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frontdesk</title>
+  <meta name="theme-color" content="#2a2a2a">
+  <meta name="view-transition" content="same-origin" />
+
+  <ClientRouter />
 </head>
 <body>
     <div class="app-container">
-        <Navigation />
-        <main class="content-area">
-            <slot /> {/* Aquí se inyectará el contenido de cada página */}
-        </main>
+
+    <div class="main-layout"> 
+
+      <Navigation />
+      
+      <main class="content">
+        <slot />
+      </main>
+      
     </div>
+  </div>
 </body>
+<script>
+</script>
 </html>
+
 
 <style lang="stylus">
   .app-container
