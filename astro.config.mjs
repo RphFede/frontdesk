@@ -1,6 +1,5 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import { ClientRouter } from 'astro:transitions';
 
 // https://astro.build/config
 export default defineConfig({
