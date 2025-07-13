@@ -1,5 +1,4 @@
 ---
-
 interface NavigationItem {
   icon: string;
   label: string;
@@ -43,13 +42,16 @@ const gradientMapping: Record<string, string> = {
   lightBlue: "linear-gradient(90deg, #87CEEB, #ADD8E6)",
   offWhite: "#F5F5F5"
 };
+
+// Obtenemos la ruta actual del lado del servidor
+const { pathname } = Astro.url;
 ---
 
 <nav>
   {navigationItems.map((item) => (
     <a
       href={item.href}
-      class="button-wrapper"
+      class={`button-wrapper ${item.href === pathname ? 'active' : ''}`.trim()}
       aria-label={item.label}
       data-target={item.target}
       >
@@ -229,4 +231,28 @@ a
     &__label
       font-size 0.9em
 </style>
+
+<script>
+/* // Función para actualizar el estado activo de los enlaces de navegación
+  function updateActiveNavLinks() {
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('nav .button-wrapper');
+    
+    navLinks.forEach(link => {
+      // Comparamos la ruta del enlace con la ruta actual
+      const href = link.getAttribute('href');
+      if (href === currentPath) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  }
+
+  // Ejecutar cuando la página se carga inicialmente
+  updateActiveNavLinks();
+  
+  // Ejecutar cuando hay una transición de página con Astro
+  document.addEventListener('astro:page-load', updateActiveNavLinks); */
+</script>
 
