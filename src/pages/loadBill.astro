@@ -78,48 +78,68 @@ import BaseLayout from "../layouts/BaseLayout.astro"
 </BaseLayout>
 
 <script>
-document.getElementById('loadbill-form').addEventListener('submit', async function(event) {
-  event.preventDefault();
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('loadbill-form');
 
-  const supplierSelect = document.getElementById('supplier');
-  const supplier = supplierSelect.options[supplierSelect.selectedIndex].text;
-  const supplierValue = supplierSelect.value;
-  const supplierRut = document.getElementById('supplier-rut').value;
-  const classification = document.getElementById('classification').value;
-  const invoiceNumber = document.getElementById('invoice-number').value;
-  const invoiceDate = document.getElementById('invoice-date').value;
-  const description = document.getElementById('description').value;
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
 
-  const invoiceData = {
-    supplier: supplier,
-    supplier_rut: supplierRut,
-    classification: classification,
-    invoice_number: invoiceNumber,
-    invoice_date: invoiceDate,
-    description: description
-  };
+      const supplierSelect = document.getElementById('supplier');
+      const supplierName = supplierSelect instanceof HTMLSelectElement ? supplierSelect.options[supplierSelect.selectedIndex].text : '';
+      const supplierRutElement = document.getElementById('supplier-rut') as HTMLInputElement;
+      const supplierRut = supplierRutElement?.value || '';
+      const classificationElement = document.getElementById('classification') as HTMLSelectElement;
+      const classification = classificationElement?.value || '';
+      const invoiceNumberElement = document.getElementById('invoice-number') as HTMLInputElement;
+      const invoiceNumber = invoiceNumberElement?.value || '';
+      const invoiceDateElement = document.getElementById('invoice-date') as HTMLInputElement;
+      const invoiceDate = invoiceDateElement?.value || '';
+      const descriptionElement = document.getElementById('description') as HTMLTextAreaElement;
+      const description = descriptionElement?.value || '';
 
-  try {
-    const response = await fetch('http://localhost:5000/invoices', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(invoiceData)
+      const invoiceData = {
+        supplier: supplierName,
+        supplier_rut: supplierRut,
+        classification,
+        invoice_number: invoiceNumber,
+        invoice_date: invoiceDate,
+        description
+      };
+
+      try {
+        const response = await fetch('http://localhost:5000/invoices', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(invoiceData)
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          alert('❌ Error: ' + error.error);
+        } else {
+          alert('✅ Factura registrada correctamente');
+(form as HTMLFormElement).reset();
+          (document.getElementById('supplier-rut') as HTMLInputElement).value = '';
+        }
+      } catch (error) {
+        alert('🚨 Fallo al enviar: ' + error.message);
+      }
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      alert('Error: ' + errorData.error);
-      return;
-    }
+    // Opcional: actualiza el RUT cuando cambias de proveedor
+    const suppliers = {
+      '1': '12.345.678-9',
+      '2': '98.765.432-1',
+      '3': '55.666.777-8',
+      '4': '11.222.333-4',
+      '5': '77.888.999-0'
+    };
 
-    alert('Invoice registered successfully!');
-    this.reset();
-  } catch (error) {
-    alert('Failed to submit invoice: ' + error.message);
-  }
-});
+    document.getElementById('supplier')?.addEventListener('change', function () {
+      const rut = suppliers[(this as HTMLSelectElement).value] || '';
+      (document.getElementById('supplier-rut') as HTMLInputElement).value = rut;
+    });
+  });
 </script>
 
 <style lang="stylus">
@@ -229,97 +249,3 @@ fieldset
         background #5a8a5a
         transform translateY(-1px)
 </style>
-
-<script>
-  // Funcionalidad para el formulario de carga de facturas
-  document.addEventListener('DOMContentLoaded', function() {
-    const supplierSelect = document.getElementById('supplier');
-    const supplierRutInput = document.getElementById('supplier-rut');
-    const netAmountInput = document.getElementById('net-amount');
-    const taxAmountInput = document.getElementById('tax-amount');
-    const totalAmountInput = document.getElementById('total-amount');
-    const form = document.getElementById('loadbill-form');
-    
-    // Datos de proveedores (en una aplicación real, esto vendría de una API)
-    const suppliers = {
-      '1': { rut: '12.345.678-9', name: 'Constructora ABC S.A.' },
-      '2': { rut: '98.765.432-1', name: 'Suministros Municipales Ltda.' },
-      '3': { rut: '55.666.777-8', name: 'Servicios Generales SRL' },
-      '4': { rut: '11.222.333-4', name: 'TechSolutions SpA' },
-      '5': { rut: '77.888.999-0', name: 'Mantenimiento Integral Ltda.' }
-    };
-    
-    // Actualizar RUT cuando se selecciona un proveedor
-    supplierSelect?.addEventListener('change', function() {
-      const selectedSupplier = suppliers[this.value];
-      if (selectedSupplier) {
-        supplierRutInput.value = selectedSupplier.rut;
-      } else {
-        supplierRutInput.value = '';
-      }
-    });
-    
-    // Calcular IVA y total automáticamente
-    netAmountInput?.addEventListener('input', function() {
-      const netAmount = parseFloat(this.value) || 0;
-      const taxAmount = netAmount * 0.19; // IVA 19%
-      const totalAmount = netAmount + taxAmount;
-      
-      taxAmountInput.value = taxAmount.toFixed(2);
-      totalAmountInput.value = totalAmount.toFixed(2);
-    });
-    
-    // Manejar envío del formulario
-    form?.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      // Recopilar datos del formulario
-      const formData = new FormData(this);
-      const invoiceData = {
-        supplierId: supplierSelect.value,
-        supplierName: suppliers[supplierSelect.value]?.name,
-        invoiceNumber: document.getElementById('invoice-number').value,
-        issueDate: document.getElementById('invoice-date').value,
-        dueDate: document.getElementById('due-date').value,
-        description: document.getElementById('description').value,
-        netAmount: parseFloat(netAmountInput.value),
-        taxAmount: parseFloat(taxAmountInput.value),
-        totalAmount: parseFloat(totalAmountInput.value),
-        category: document.getElementById('category').value,
-        paymentMethod: document.getElementById('payment-method').value,
-        currency: document.getElementById('currency').value,
-        status: 'Pendiente'
-      };
-      
-      // Aquí se enviarían los datos a la API
-      console.log('Datos de la factura:', invoiceData);
-      
-      // Mostrar mensaje de éxito
-      alert('✅ Factura registrada exitosamente');
-      
-      // Limpiar formulario
-      this.reset();
-      supplierRutInput.value = '';
-      taxAmountInput.value = '';
-      totalAmountInput.value = '';
-    });
-    
-    // Botón cancelar
-    document.getElementById('cancel-btn')?.addEventListener('click', function() {
-      if (confirm('¿Estás seguro de que quieres cancelar? Se perderán todos los datos ingresados.')) {
-        form.reset();
-        supplierRutInput.value = '';
-        taxAmountInput.value = '';
-        totalAmountInput.value = '';
-      }
-    });
-    
-    // Botón guardar borrador
-    document.getElementById('save-draft-btn')?.addEventListener('click', function() {
-      // Aquí se guardaría como borrador
-      alert('💾 Borrador guardado exitosamente');
-    });
-  });
-</script> });
-  });
-</script>
