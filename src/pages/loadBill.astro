@@ -1,5 +1,10 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro"
+
+// 1. Obtenemos los proveedores desde nuestra API al cargar la página
+const response = await fetch('http://127.0.0.1:5000/api/suppliers');
+const data = await response.json();
+const suppliers = data.suppliers || []; // Usamos un array vacío si falla
 ---
 <BaseLayout>
 <section id="loadbill" class="view">
@@ -15,13 +20,11 @@ import BaseLayout from "../layouts/BaseLayout.astro"
         <div class="row">
           <div class="group">
             <label for="supplier">Razón Social *</label>
-            <select id="supplier" required>
+                        <select id="supplier" required data-suppliers={JSON.stringify(suppliers)}>
               <option value="">Seleccionar proveedor...</option>
-              <option value="1">Constructora ABC S.A.</option>
-              <option value="2">Suministros Municipales Ltda.</option>
-              <option value="3">Servicios Generales SRL</option>
-              <option value="4">TechSolutions SpA</option>
-              <option value="5">Mantenimiento Integral Ltda.</option>
+              {suppliers.map(supplier => (
+                <option value={supplier.id} data-cuit={supplier.cuit}>{supplier.name}</option>
+              ))}
             </select>
           </div>
           <div class="group">
@@ -56,6 +59,10 @@ import BaseLayout from "../layouts/BaseLayout.astro"
             <label for="invoice-date">Fecha de Emisión *</label>
             <input type="date" id="invoice-date" required>
           </div>
+          <div class="group">
+            <label for="amount">Monto *</label>
+            <input type="number" id="amount" placeholder="$" required>
+          </div>
         </div>
         
         <div class="row">
@@ -75,69 +82,138 @@ import BaseLayout from "../layouts/BaseLayout.astro"
   </div>
 </div>
 </section>
+
+<!-- Modal para Añadir Proveedor -->
+<div id="add-supplier-modal" class="modal hidden">
+  <div class="modal-content">
+    <h2>Añadir Nuevo Proveedor</h2>
+    <form id="add-supplier-form">
+      <div class="form-group">
+        <label for="new-supplier-name">Razón Social *</label>
+        <input type="text" id="new-supplier-name" required>
+      </div>
+      <div class="form-group">
+        <label for="new-supplier-cuit">CUIT *</label>
+        <input type="text" id="new-supplier-cuit" placeholder="30-12345678-9" required>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn">Cancelar</button>
+        <button type="submit" class="save-btn">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 </BaseLayout>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('loadbill-form');
+    // --- Selección de Elementos ---
+    const supplierSelect = document.getElementById('supplier');
+    const supplierRut = document.getElementById('supplier-rut');
+    const addSupplierBtn = document.getElementById('add-supplier');
+    const loadBillForm = document.getElementById('loadbill-form');
+    const cleanBtn = document.getElementById('clean-btn');
+    const addSupplierModal = document.getElementById('add-supplier-modal');
+    const cancelBtn = addSupplierModal.querySelector('.cancel-btn');
+    const addSupplierForm = document.getElementById('add-supplier-form');
 
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
+    // --- Lógica de Proveedores ---
 
-      const supplierSelect = document.getElementById('supplier');
-      const supplierName = supplierSelect instanceof HTMLSelectElement ? supplierSelect.options[supplierSelect.selectedIndex].text : '';
-      const supplierRutElement = document.getElementById('supplier-rut') as HTMLInputElement;
-      const supplierRut = supplierRutElement?.value || '';
-      const classificationElement = document.getElementById('classification') as HTMLSelectElement;
-      const classification = classificationElement?.value || '';
-      const invoiceNumberElement = document.getElementById('invoice-number') as HTMLInputElement;
-      const invoiceNumber = invoiceNumberElement?.value || '';
-      const invoiceDateElement = document.getElementById('invoice-date') as HTMLInputElement;
-      const invoiceDate = invoiceDateElement?.value || '';
-      const descriptionElement = document.getElementById('description') as HTMLTextAreaElement;
-      const description = descriptionElement?.value || '';
-
-      const invoiceData = {
-        supplier: supplierName,
-        supplier_rut: supplierRut,
-        classification,
-        invoice_number: invoiceNumber,
-        invoice_date: invoiceDate,
-        description
-      };
-
-      try {
-        const response = await fetch('http://localhost:5000/invoices', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(invoiceData)
-        });
-
-        if (!response.ok) {
-          const error = await response.json();
-          alert('❌ Error: ' + error.error);
-        } else {
-          alert('✅ Factura registrada correctamente');
-(form as HTMLFormElement).reset();
-          (document.getElementById('supplier-rut') as HTMLInputElement).value = '';
-        }
-      } catch (error) {
-        alert('🚨 Fallo al enviar: ' + error.message);
+    // Evento para actualizar el CUIT cuando se selecciona un proveedor
+    supplierSelect.addEventListener('change', () => {
+      const selectedOption = supplierSelect.options[supplierSelect.selectedIndex];
+      console.log('Opción seleccionada:', selectedOption);
+      if (selectedOption && selectedOption.dataset.cuit) {
+        const cuit = selectedOption.dataset.cuit;
+        console.log('CUIT obtenido:', cuit);
+        supplierRut.value = cuit;
+      } else {
+        console.log('No se encontró CUIT o no hay opción seleccionada.');
+        supplierRut.value = '';
       }
     });
 
-    // Opcional: actualiza el RUT cuando cambias de proveedor
-    const suppliers = {
-      '1': '12.345.678-9',
-      '2': '98.765.432-1',
-      '3': '55.666.777-8',
-      '4': '11.222.333-4',
-      '5': '77.888.999-0'
+    // --- Lógica del Modal --- 
+
+    const showModal = () => {
+      addSupplierModal.classList.remove('hidden');
     };
 
-    document.getElementById('supplier')?.addEventListener('change', function () {
-      const rut = suppliers[(this as HTMLSelectElement).value] || '';
-      (document.getElementById('supplier-rut') as HTMLInputElement).value = rut;
+    const hideModal = () => {
+      addSupplierModal.classList.add('hidden');
+    };
+
+    addSupplierBtn.addEventListener('click', showModal);
+    cancelBtn.addEventListener('click', hideModal);
+
+    // Evento para GUARDAR el nuevo proveedor en la API
+    addSupplierForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const newName = document.getElementById('new-supplier-name').value;
+      const newCuit = document.getElementById('new-supplier-cuit').value;
+
+      if (!newName || !newCuit) return;
+
+      const response = await fetch('http://127.0.0.1:5000/api/suppliers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newName, cuit: newCuit })
+      });
+      
+      if (response.ok) {
+        const newSupplier = await response.json();
+        // Añadir el nuevo proveedor al select
+        const newOption = document.createElement('option');
+        newOption.value = newSupplier.id;
+        newOption.textContent = newSupplier.name;
+        newOption.dataset.cuit = newSupplier.cuit;
+        supplierSelect.appendChild(newOption);
+        // Seleccionar el nuevo proveedor y cerrar modal
+        supplierSelect.value = newSupplier.id;
+        supplierSelect.dispatchEvent(new Event('change')); // Simula el cambio para actualizar CUIT
+        hideModal();
+        alert('Proveedor añadido exitosamente.');
+      } else {
+        const error = await response.json();
+        alert(`Error: ${error.message}`);
+      }
+    });
+
+    // --- Lógica del Formulario Principal (Cargar Factura) ---
+
+    // Evento para REGISTRAR la factura en la API
+    loadBillForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const billData = {
+            supplierId: document.getElementById('supplier').value,
+            classification: document.getElementById('classification').value,
+            invoiceNumber: document.getElementById('invoice-number').value,
+            invoiceDate: document.getElementById('invoice-date').value,
+            amount: document.getElementById('amount').value, // Añadimos el monto
+            description: document.getElementById('description').value,
+        };
+
+        const response = await fetch('http://127.0.0.1:5000/api/bills', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(billData),
+        });
+
+        if (response.ok) {
+            alert('¡Factura registrada exitosamente!');
+            loadBillForm.reset(); // Limpia el formulario
+            supplierRut.value = ''; // Limpia el campo CUIT
+        } else {
+            const error = await response.json();
+            alert(`Error al registrar la factura: ${error.message}`);
+        }
+    });
+
+    // Evento para el botón de LIMPIAR
+    cleanBtn.addEventListener('click', () => {
+        loadBillForm.reset();
+        supplierRut.value = '';
     });
   });
 </script>

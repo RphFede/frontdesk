@@ -80,6 +80,23 @@ import BaseLayout from "../layouts/BaseLayout.astro"
   let currentPage = 1;
   const itemsPerPage = 10;
 
+  async function fetchInvoices() {
+    try {
+      const response = await fetch('http://localhost:5000/api/bills');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      invoicesData = data.bills.map(bill => ({...bill, supplier: bill.supplier_name})); // Adaptar el nombre del proveedor
+      filteredInvoices = [...invoicesData];
+      renderTable();
+    } catch (error) {
+      console.error("Error fetching invoices:", error);
+      const invoicesTbody = document.getElementById('invoices-tbody');
+      invoicesTbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: red;">Error al cargar las facturas.</td></tr>`;
+    }
+  }
+
   const searchInput = document.getElementById('search-input');
   const statusFilter = document.getElementById('status-filter');
   const categoryFilter = document.getElementById('category-filter');
@@ -242,19 +259,7 @@ import BaseLayout from "../layouts/BaseLayout.astro"
     }
   };
 
-  async function fetchInvoices() {
-    try {
-      const response = await fetch('http://localhost:5000/invoices');
-      if (!response.ok) {
-        throw new Error('Failed to fetch invoices');
-      }
-      invoicesData = await response.json();
-      applyFilters();
-    } catch (error) {
-      alert('Error fetching invoices: ' + error.message);
-    }
-  }
-
+  // Llama a la función para obtener los datos cuando la página se carga
   fetchInvoices();
 });
 </script>
@@ -518,255 +523,3 @@ import BaseLayout from "../layouts/BaseLayout.astro"
     color: white;
   }
 </style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Datos de ejemplo de facturas
-    const invoicesData = [
-      {
-        id: 1,
-        number: 'FAC-2024-001',
-        supplier: 'Constructora ABC S.A.',
-        issueDate: '2024-01-15',
-        dueDate: '2024-02-15',
-        amount: 1250000,
-        status: 'Pendiente',
-        category: 'Construcción'
-      },
-      {
-        id: 2,
-        number: 'FAC-2024-002',
-        supplier: 'Suministros Municipales Ltda.',
-        issueDate: '2024-01-20',
-        dueDate: '2024-02-20',
-        amount: 850000,
-        status: 'Pagada',
-        category: 'Suministros'
-      },
-      {
-        id: 3,
-        number: 'FAC-2024-003',
-        supplier: 'Servicios Técnicos Pro',
-        issueDate: '2024-01-10',
-        dueDate: '2024-01-25',
-        amount: 450000,
-        status: 'Vencida',
-        category: 'Servicios'
-      },
-      {
-        id: 4,
-        number: 'FAC-2024-004',
-        supplier: 'Tecnología Avanzada S.A.',
-        issueDate: '2024-01-25',
-        dueDate: '2024-02-25',
-        amount: 2100000,
-        status: 'Pendiente',
-        category: 'Tecnología'
-      },
-      {
-        id: 5,
-        number: 'FAC-2024-005',
-        supplier: 'Mantenimiento Integral',
-        issueDate: '2024-01-12',
-        dueDate: '2024-02-12',
-        amount: 320000,
-        status: 'Cancelada',
-        category: 'Mantenimiento'
-      }
-    ];
-    
-    let filteredInvoices = [...invoicesData];
-    let currentPage = 1;
-    const itemsPerPage = 10;
-    
-    // Referencias a elementos DOM
-    const searchInput = document.getElementById('search-input');
-    const statusFilter = document.getElementById('status-filter');
-    const categoryFilter = document.getElementById('category-filter');
-    const clearFiltersBtn = document.getElementById('clear-filters-btn');
-    const exportBtn = document.getElementById('export-btn');
-    const invoicesTable = document.getElementById('invoices-table');
-    const invoicesTbody = document.getElementById('invoices-tbody');
-    const prevPageBtn = document.getElementById('prev-page');
-    const nextPageBtn = document.getElementById('next-page');
-    const pageInfo = document.getElementById('page-info');
-    const invoiceModal = document.getElementById('invoice-modal');
-    const closeModalBtn = document.getElementById('close-modal');
-    const modalBody = document.getElementById('modal-body');
-    
-    // Función para formatear moneda
-    function formatCurrency(amount) {
-      return new Intl.NumberFormat('es-CL', {
-        style: 'currency',
-        currency: 'CLP'
-      }).format(amount);
-    }
-    
-    // Función para formatear fecha
-    function formatDate(dateString) {
-      return new Date(dateString).toLocaleDateString('es-CL');
-    }
-    
-    // Función para crear badge de estado
-    function createStatusBadge(status) {
-      const statusClass = `status-${status.toLowerCase()}`;
-      return `<span class="status-badge ${statusClass}">${status}</span>`;
-    }
-    
-    // Función para renderizar tabla
-    function renderTable() {
-      const startIndex = (currentPage - 1) * itemsPerPage;
-      const endIndex = startIndex + itemsPerPage;
-      const pageInvoices = filteredInvoices.slice(startIndex, endIndex);
-      
-      invoicesTbody.innerHTML = '';
-      
-      if (pageInvoices.length === 0) {
-        invoicesTbody.innerHTML = `
-          <tr>
-            <td colspan="8" style="text-align: center; padding: 40px; color: #7f8c8d;">
-              📋 No se encontraron facturas que coincidan con los filtros aplicados
-            </td>
-          </tr>
-        `;
-        return;
-      }
-      
-      pageInvoices.forEach(invoice => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${invoice.number}</td>
-          <td>${invoice.supplier}</td>
-          <td>${formatDate(invoice.issueDate)}</td>
-          <td>${formatDate(invoice.dueDate)}</td>
-          <td>${formatCurrency(invoice.amount)}</td>
-          <td>${createStatusBadge(invoice.status)}</td>
-          <td>${invoice.category}</td>
-          <td>
-            <button class="action-btn btn-view" onclick="viewInvoice(${invoice.id})">👁️ Ver</button>
-            <button class="action-btn btn-edit" onclick="editInvoice(${invoice.id})">✏️ Editar</button>
-            <button class="action-btn btn-delete" onclick="deleteInvoice(${invoice.id})">🗑️ Eliminar</button>
-          </td>
-        `;
-        invoicesTbody.appendChild(row);
-      });
-      
-      updatePagination();
-    }
-    
-    // Función para actualizar paginación
-    function updatePagination() {
-      const totalPages = Math.ceil(filteredInvoices.length / itemsPerPage);
-      
-      prevPageBtn.disabled = currentPage === 1;
-      nextPageBtn.disabled = currentPage === totalPages || totalPages === 0;
-      
-      pageInfo.textContent = totalPages > 0 ? `Página ${currentPage} de ${totalPages}` : 'Sin resultados';
-    }
-    
-    // Función para aplicar filtros
-    function applyFilters() {
-      const searchTerm = searchInput.value.toLowerCase();
-      const statusValue = statusFilter.value;
-      const categoryValue = categoryFilter.value;
-      
-      filteredInvoices = invoicesData.filter(invoice => {
-        const matchesSearch = !searchTerm || 
-          invoice.number.toLowerCase().includes(searchTerm) ||
-          invoice.supplier.toLowerCase().includes(searchTerm) ||
-          invoice.amount.toString().includes(searchTerm);
-        
-        const matchesStatus = !statusValue || invoice.status === statusValue;
-        const matchesCategory = !categoryValue || invoice.category === categoryValue;
-        
-        return matchesSearch && matchesStatus && matchesCategory;
-      });
-      
-      currentPage = 1;
-      renderTable();
-    }
-    
-    // Event listeners para filtros
-    searchInput.addEventListener('input', applyFilters);
-    statusFilter.addEventListener('change', applyFilters);
-    categoryFilter.addEventListener('change', applyFilters);
-    
-    // Limpiar filtros
-    clearFiltersBtn.addEventListener('click', function() {
-      searchInput.value = '';
-      statusFilter.value = '';
-      categoryFilter.value = '';
-      applyFilters();
-    });
-    
-    // Paginación
-    prevPageBtn.addEventListener('click', function() {
-      if (currentPage > 1) {
-        currentPage--;
-        renderTable();
-      }
-    });
-    
-    nextPageBtn.addEventListener('click', function() {
-      const totalPages = Math.ceil(filteredInvoices.length / itemsPerPage);
-      if (currentPage < totalPages) {
-        currentPage++;
-        renderTable();
-      }
-    });
-    
-    // Exportar datos
-    exportBtn.addEventListener('click', function() {
-      // Aquí implementarías la lógica de exportación
-      alert('Funcionalidad de exportación en desarrollo');
-    });
-    
-    // Modal
-    closeModalBtn.addEventListener('click', function() {
-      invoiceModal.style.display = 'none';
-    });
-    
-    // Cerrar modal al hacer clic fuera
-    invoiceModal.addEventListener('click', function(e) {
-      if (e.target === invoiceModal) {
-        invoiceModal.style.display = 'none';
-      }
-    });
-    
-    // Funciones globales para acciones de tabla
-    window.viewInvoice = function(id) {
-      const invoice = invoicesData.find(inv => inv.id === id);
-      if (invoice) {
-        modalBody.innerHTML = `
-          <div style="display: grid; gap: 15px;">
-            <div><strong>Número:</strong> ${invoice.number}</div>
-            <div><strong>Proveedor:</strong> ${invoice.supplier}</div>
-            <div><strong>Fecha de Emisión:</strong> ${formatDate(invoice.issueDate)}</div>
-            <div><strong>Fecha de Vencimiento:</strong> ${formatDate(invoice.dueDate)}</div>
-            <div><strong>Monto:</strong> ${formatCurrency(invoice.amount)}</div>
-            <div><strong>Estado:</strong> ${createStatusBadge(invoice.status)}</div>
-            <div><strong>Categoría:</strong> ${invoice.category}</div>
-          </div>
-        `;
-        invoiceModal.style.display = 'flex';
-      }
-    };
-    
-    window.editInvoice = function(id) {
-      alert(`Editar factura ID: ${id} - Funcionalidad en desarrollo`);
-    };
-    
-    window.deleteInvoice = function(id) {
-      if (confirm('¿Estás seguro de que deseas eliminar esta factura?')) {
-        const index = invoicesData.findIndex(inv => inv.id === id);
-        if (index !== -1) {
-          invoicesData.splice(index, 1);
-          applyFilters();
-        }
-      }
-    };
-    
-    // Renderizar tabla inicial
-    renderTable();
-  });
-</script>
