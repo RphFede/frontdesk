@@ -1,179 +1,323 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro"
+import BaseLayout from "../layouts/BaseLayout.astro";
 
 // 1. Obtenemos los proveedores desde nuestra API al cargar la página
-const response = await fetch('http://127.0.0.1:5000/api/suppliers');
+const response = await fetch("http://127.0.0.1:5000/api/suppliers");
 const data = await response.json();
 const suppliers = data.suppliers || []; // Usamos un array vacío si falla
 ---
+
 <BaseLayout>
-<section id="loadbill" class="view">
+  <section id="loadbill" class="view">
+    <h1>Cargar Factura</h1>
 
-  <h1>Cargar Factura</h1>
+    <div class="view-container">
+      <div class="form-section">
+        <form id="loadbill-form">
+          <!-- Información del Proveedor -->
+          <fieldset>
+            <legend>🏢 Información de proveedor</legend>
+            <div class="row">
+              <div class="group">
+                <label for="supplier">Razón Social *</label>
+                <select
+                  id="supplier"
+                  required
+                  data-suppliers={JSON.stringify(suppliers)}
+                >
+                  <option value="">Seleccionar proveedor...</option>
+                  {
+                    suppliers.map((supplier) => (
+                      <option value={supplier.id} data-cuit={supplier.cuit}>
+                        {supplier.name}
+                      </option>
+                    ))
+                  }
+                </select>
+              </div>
+              <div class="group">
+                <label for="supplier-rut">CUIT</label>
+                <input
+                  type="text"
+                  id="supplier-rut"
+                  placeholder="12.345.678-9"
+                  readonly
+                />
+              </div>
+              <div class="group">
+                <label for="add-supplier">Agregar Nuevo</label>
+                <button type="button" id="add-supplier">+</button>
+              </div>
+            </div>
+          </fieldset>
 
-<div class="view-container">  
-  <div class="form-section">
-    <form id="loadbill-form">
-      <!-- Información del Proveedor -->
-      <fieldset>
-        <legend>🏢 Información de proveedor</legend>
-        <div class="row">
-          <div class="group">
-            <label for="supplier">Razón Social *</label>
-                        <select id="supplier" required data-suppliers={JSON.stringify(suppliers)}>
-              <option value="">Seleccionar proveedor...</option>
-              {suppliers.map(supplier => (
-                <option value={supplier.id} data-cuit={supplier.cuit}>{supplier.name}</option>
-              ))}
-            </select>
-          </div>
-          <div class="group">
-            <label for="supplier-rut">CUIT</label>
-            <input type="text" id="supplier-rut" placeholder="12.345.678-9" readonly>
-          </div>
-          <div class="group">
-            <label for="add-supplier">Agregar Nuevo</label>
-            <button type="button" id="add-supplier">+</button>
-          </div>          
-        </div>
-      </fieldset>
+          <!-- Información de la Factura -->
+          <fieldset>
+            <legend>📄 Datos de factura</legend>
+            <div class="row">
+              <div class="group">
+                <label for="classification">Clasificación *</label>
+                <select id="classification" required>
+                  <option value="">Seleccionar clasificación...</option>
+                  <option value="consumer goods">Consumo</option>
+                  <option value="services">Servicio</option>
+                  <option value="capital goods">Capital</option>
+                </select>
+              </div>
+              <div class="group">
+                <label for="invoice-number">Nro. Factura *</label>
+                <input
+                  type="text"
+                  id="invoice-number"
+                  placeholder="Ej: B-00001-01234"
+                  required
+                />
+              </div>
+              <div class="group">
+                <label for="invoice-date">Fecha de Emisión *</label>
+                <input type="date" id="invoice-date" required />
+              </div>
+              <div class="group">
+                <label for="amount">Monto *</label>
+                <input type="number" id="amount" placeholder="$" required />
+              </div>
+            </div>
 
-      <!-- Información de la Factura -->
-      <fieldset>
-        <legend>📄 Datos de factura</legend>
-        <div class="row">
-          <div class="group">
-            <label for="classification">Clasificación *</label>
-            <select id="classification" required>
-              <option value="">Seleccionar clasificación...</option>
-              <option value="consumer goods">Consumo</option>
-              <option value="services">Servicio</option>
-              <option value="capital goods">Capital</option>
-            </select>
-          </div>
-          <div class="group">
-            <label for="invoice-number">Nro. Factura *</label>
-            <input type="text" id="invoice-number" placeholder="Ej: B-00001-01234" required>
-          </div>
-          <div class="group">
-            <label for="invoice-date">Fecha de Emisión *</label>
-            <input type="date" id="invoice-date" required>
-          </div>
-          <div class="group">
-            <label for="amount">Monto *</label>
-            <input type="number" id="amount" placeholder="$" required>
-          </div>
-        </div>
-        
-        <div class="row">
-          <div class="group">
-            <label for="description">Descripción *</label>
-            <textarea id="description" placeholder="Descripción de bien o servicio..." required></textarea>
-          </div>
-        </div>
-      </fieldset>
+            <div class="row">
+              <div class="group">
+                <label for="description">Descripción *</label>
+                <textarea
+                  id="description"
+                  placeholder="Descripción de bien o servicio..."
+                  required></textarea>
+              </div>
+            </div>
+          </fieldset>
 
-      <!-- Botones de Acción -->
-      <div class="actions">
-        <button type="button" class="clean" id="clean-btn">❌ Limpiar valores</button>
-        <button type="submit" class="submit" id="submit-btn">✅ Registrar factura</button>
+          <!-- Botones de Acción -->
+          <div class="actions">
+            <button type="button" class="clean" id="clean-btn"
+              >❌ Limpiar valores</button
+            >
+            <button type="submit" class="submit" id="submit-btn"
+              >✅ Registrar factura</button
+            >
+          </div>
+        </form>
       </div>
-    </form>
+    </div>
+  </section>
+
+  <!-- Modal para Añadir Proveedor -->
+  <div id="add-supplier-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Añadir Nuevo Proveedor</h2>
+      <form id="add-supplier-form">
+        <div class="form-group">
+          <label for="new-supplier-name">Razón Social *</label>
+          <input type="text" id="new-supplier-name" required />
+        </div>
+        <div class="form-group">
+          <label for="new-supplier-cuit">CUIT *</label>
+          <input
+            type="text"
+            id="new-supplier-cuit"
+            placeholder="30-12345678-9"
+            maxlength="13"
+            required
+          />
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn">Cancelar</button>
+          <button type="submit" class="save-btn">Guardar</button>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
-</section>
-
-<!-- Modal para Añadir Proveedor -->
-<div id="add-supplier-modal" class="modal hidden">
-  <div class="modal-content">
-    <h2>Añadir Nuevo Proveedor</h2>
-    <form id="add-supplier-form">
-      <div class="form-group">
-        <label for="new-supplier-name">Razón Social *</label>
-        <input type="text" id="new-supplier-name" required>
-      </div>
-      <div class="form-group">
-        <label for="new-supplier-cuit">CUIT *</label>
-        <input type="text" id="new-supplier-cuit" placeholder="30-12345678-9" required>
-      </div>
-      <div class="modal-actions">
-        <button type="button" class="cancel-btn">Cancelar</button>
-        <button type="submit" class="save-btn">Guardar</button>
-      </div>
-    </form>
-  </div>
-</div>
-
 </BaseLayout>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("DOMContentLoaded", () => {
     // --- Selección de Elementos ---
-    const supplierSelect = document.getElementById('supplier');
-    const supplierRut = document.getElementById('supplier-rut');
-    const addSupplierBtn = document.getElementById('add-supplier');
-    const loadBillForm = document.getElementById('loadbill-form');
-    const cleanBtn = document.getElementById('clean-btn');
-    const addSupplierModal = document.getElementById('add-supplier-modal');
-    const cancelBtn = addSupplierModal.querySelector('.cancel-btn');
-    const addSupplierForm = document.getElementById('add-supplier-form');
+    const supplierSelect = document.getElementById("supplier");
+    const supplierRut = document.getElementById("supplier-rut");
+    const addSupplierBtn = document.getElementById("add-supplier");
+    const loadBillForm = document.getElementById("loadbill-form");
+    const cleanBtn = document.getElementById("clean-btn");
+    const addSupplierModal = document.getElementById("add-supplier-modal");
+    const cancelBtn = addSupplierModal.querySelector(".cancel-btn");
+    const addSupplierForm = document.getElementById("add-supplier-form");
+    const newSupplierCuitInput = document.getElementById("new-supplier-cuit");
+    const invoiceNumberInput = document.getElementById("invoice-number");
+
+    // --- Funciones de Formateo CUIT ---
+    const formatCuit = (value) => {
+      // Remover todos los caracteres que no sean números
+      const numbers = value.replace(/\D/g, "");
+
+      // Limitar a 11 dígitos máximo
+      const limitedNumbers = numbers.substring(0, 11);
+
+      // Aplicar formato XX-XXXXXXXX-X
+      if (limitedNumbers.length <= 2) {
+        return limitedNumbers;
+      } else if (limitedNumbers.length <= 10) {
+        return (
+          limitedNumbers.substring(0, 2) + "-" + limitedNumbers.substring(2)
+        );
+      } else {
+        return (
+          limitedNumbers.substring(0, 2) +
+          "-" +
+          limitedNumbers.substring(2, 10) +
+          "-" +
+          limitedNumbers.substring(10)
+        );
+      }
+    };
+
+    const handleCuitInput = (e) => {
+      const input = e.target;
+      const cursorPosition = input.selectionStart;
+      const oldValue = input.value;
+      const newValue = formatCuit(input.value);
+
+      input.value = newValue;
+
+      // Ajustar posición del cursor después del formateo
+      let newCursorPosition = cursorPosition;
+      if (
+        newValue.length > oldValue.length &&
+        (cursorPosition === 3 || cursorPosition === 12)
+      ) {
+        newCursorPosition = cursorPosition + 1;
+      }
+
+      input.setSelectionRange(newCursorPosition, newCursorPosition);
+    };
+
+    // --- Funciones de Formateo Número de Factura ---
+    const formatInvoiceNumber = (value) => {
+      // Remover espacios y convertir a mayúsculas
+      let cleaned = value.replace(/\s/g, "").toUpperCase();
+
+      // Separar letra inicial de los números
+      const letterMatch = cleaned.match(/^([A-Z])/);
+      const numbersOnly = cleaned.replace(/[^0-9]/g, "");
+
+      if (!letterMatch) {
+        // Si no hay letra, solo devolver números formateados
+        if (numbersOnly.length <= 5) {
+          return numbersOnly;
+        } else {
+          return (
+            numbersOnly.substring(0, 5) + "-" + numbersOnly.substring(5, 13)
+          );
+        }
+      }
+
+      const letter = letterMatch[1];
+
+      // Aplicar formato LETRA-XXXXX-XXXXXXXX
+      if (numbersOnly.length === 0) {
+        return letter;
+      } else if (numbersOnly.length <= 5) {
+        return letter + "-" + numbersOnly.padStart(5, "0");
+      } else {
+        const pointOfSale = numbersOnly.substring(0, 5).padStart(5, "0");
+        const invoiceNum = numbersOnly.substring(5, 13);
+        return letter + "-" + pointOfSale + "-" + invoiceNum;
+      }
+    };
+
+    const handleInvoiceNumberInput = (e) => {
+      const input = e.target;
+      const cursorPosition = input.selectionStart;
+      const oldValue = input.value;
+      const newValue = formatInvoiceNumber(input.value);
+
+      input.value = newValue;
+
+      // Ajustar posición del cursor después del formateo
+      let newCursorPosition = cursorPosition;
+      if (newValue.length > oldValue.length) {
+        // Si se agregaron guiones, ajustar cursor
+        if (newValue.charAt(cursorPosition) === "-") {
+          newCursorPosition = cursorPosition + 1;
+        }
+      }
+
+      input.setSelectionRange(newCursorPosition, newCursorPosition);
+    };
 
     // --- Lógica de Proveedores ---
 
     // Evento para actualizar el CUIT cuando se selecciona un proveedor
-    supplierSelect.addEventListener('change', () => {
-      const selectedOption = supplierSelect.options[supplierSelect.selectedIndex];
-      console.log('Opción seleccionada:', selectedOption);
+    supplierSelect.addEventListener("change", () => {
+      const selectedOption =
+        supplierSelect.options[supplierSelect.selectedIndex];
+      console.log("Opción seleccionada:", selectedOption);
       if (selectedOption && selectedOption.dataset.cuit) {
         const cuit = selectedOption.dataset.cuit;
-        console.log('CUIT obtenido:', cuit);
-        supplierRut.value = cuit;
+        console.log("CUIT obtenido:", cuit);
+        // Formatear el CUIT antes de mostrarlo
+        supplierRut.value = formatCuit(cuit);
       } else {
-        console.log('No se encontró CUIT o no hay opción seleccionada.');
-        supplierRut.value = '';
+        console.log("No se encontró CUIT o no hay opción seleccionada.");
+        supplierRut.value = "";
       }
     });
 
-    // --- Lógica del Modal --- 
+    // --- Lógica del Modal ---
 
     const showModal = () => {
-      addSupplierModal.classList.remove('hidden');
+      addSupplierModal.classList.remove("hidden");
     };
 
     const hideModal = () => {
-      addSupplierModal.classList.add('hidden');
+      addSupplierModal.classList.add("hidden");
     };
 
-    addSupplierBtn.addEventListener('click', showModal);
-    cancelBtn.addEventListener('click', hideModal);
+    addSupplierBtn.addEventListener("click", showModal);
+    cancelBtn.addEventListener("click", hideModal);
+
+    // Aplicar formateo automático al campo CUIT del modal
+    if (newSupplierCuitInput) {
+      newSupplierCuitInput.addEventListener("input", handleCuitInput);
+    }
+
+    // Aplicar formateo automático al campo número de factura
+    if (invoiceNumberInput) {
+      invoiceNumberInput.addEventListener("input", handleInvoiceNumberInput);
+    }
 
     // Evento para GUARDAR el nuevo proveedor en la API
-    addSupplierForm.addEventListener('submit', async (e) => {
+    addSupplierForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const newName = document.getElementById('new-supplier-name').value;
-      const newCuit = document.getElementById('new-supplier-cuit').value;
+      const newName = document.getElementById("new-supplier-name").value;
+      const newCuit = document.getElementById("new-supplier-cuit").value;
 
       if (!newName || !newCuit) return;
 
-      const response = await fetch('http://127.0.0.1:5000/api/suppliers', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: newName, cuit: newCuit })
+      const response = await fetch("http://127.0.0.1:5000/api/suppliers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newName, cuit: newCuit }),
       });
-      
+
       if (response.ok) {
         const newSupplier = await response.json();
         // Añadir el nuevo proveedor al select
-        const newOption = document.createElement('option');
+        const newOption = document.createElement("option");
         newOption.value = newSupplier.id;
         newOption.textContent = newSupplier.name;
         newOption.dataset.cuit = newSupplier.cuit;
         supplierSelect.appendChild(newOption);
         // Seleccionar el nuevo proveedor y cerrar modal
         supplierSelect.value = newSupplier.id;
-        supplierSelect.dispatchEvent(new Event('change')); // Simula el cambio para actualizar CUIT
+        supplierSelect.dispatchEvent(new Event("change")); // Simula el cambio para actualizar CUIT
         hideModal();
-        alert('Proveedor añadido exitosamente.');
+        alert("Proveedor añadido exitosamente.");
       } else {
         const error = await response.json();
         alert(`Error: ${error.message}`);
@@ -183,37 +327,37 @@ const suppliers = data.suppliers || []; // Usamos un array vacío si falla
     // --- Lógica del Formulario Principal (Cargar Factura) ---
 
     // Evento para REGISTRAR la factura en la API
-    loadBillForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const billData = {
-            supplierId: document.getElementById('supplier').value,
-            classification: document.getElementById('classification').value,
-            invoiceNumber: document.getElementById('invoice-number').value,
-            invoiceDate: document.getElementById('invoice-date').value,
-            amount: document.getElementById('amount').value, // Añadimos el monto
-            description: document.getElementById('description').value,
-        };
+    loadBillForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const billData = {
+        supplierId: document.getElementById("supplier").value,
+        classification: document.getElementById("classification").value,
+        invoiceNumber: document.getElementById("invoice-number").value,
+        invoiceDate: document.getElementById("invoice-date").value,
+        amount: document.getElementById("amount").value, // Añadimos el monto
+        description: document.getElementById("description").value,
+      };
 
-        const response = await fetch('http://127.0.0.1:5000/api/bills', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(billData),
-        });
+      const response = await fetch("http://127.0.0.1:5000/api/bills", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(billData),
+      });
 
-        if (response.ok) {
-            alert('¡Factura registrada exitosamente!');
-            loadBillForm.reset(); // Limpia el formulario
-            supplierRut.value = ''; // Limpia el campo CUIT
-        } else {
-            const error = await response.json();
-            alert(`Error al registrar la factura: ${error.message}`);
-        }
+      if (response.ok) {
+        alert("¡Factura registrada exitosamente!");
+        loadBillForm.reset(); // Limpia el formulario
+        supplierRut.value = ""; // Limpia el campo CUIT
+      } else {
+        const error = await response.json();
+        alert(`Error al registrar la factura: ${error.message}`);
+      }
     });
 
     // Evento para el botón de LIMPIAR
-    cleanBtn.addEventListener('click', () => {
-        loadBillForm.reset();
-        supplierRut.value = '';
+    cleanBtn.addEventListener("click", () => {
+      loadBillForm.reset();
+      supplierRut.value = "";
     });
   });
 </script>
@@ -287,41 +431,146 @@ fieldset
     resize vertical
     font-family inherit
 
-.form-actions
+// --- Estilos de los Botones de Acción ---
+.actions
   display flex
   gap 1rem
   justify-content flex-end
   padding-top 2rem
   border-top 1px solid var(--border-color)
+  margin-top 2rem
   
   @media (max-width: 768px)
     flex-direction column
+    gap 0.75rem
   
   button
-    padding 0.75rem 2rem
+    padding 0.875rem 2.5rem
     border none
-    border-radius 6px
+    border-radius 8px
     font-weight 600
     font-size 1rem
     cursor pointer
+    transition all 0.3s ease
+    display flex
+    align-items center
+    justify-content center
+    gap 0.5rem
+    min-width 180px
+    box-shadow 0 2px 4px rgba(0, 0, 0, 0.1)
+    
+    &:hover
+      transform translateY(-2px)
+      box-shadow 0 4px 12px rgba(0, 0, 0, 0.15)
+    
+    &:active
+      transform translateY(0)
+      box-shadow 0 2px 4px rgba(0, 0, 0, 0.1)
+    
+    &.clean
+      background linear-gradient(135deg, #e74c3c, #c0392b)
+      color white
+      border 2px solid transparent
+      
+      &:hover
+        background linear-gradient(135deg, #c0392b, #a93226)
+        border-color rgba(231, 76, 60, 0.3)
+    
+    &.submit
+      background linear-gradient(135deg, #27ae60, #229954)
+      color white
+      border 2px solid transparent
+      
+      &:hover
+        background linear-gradient(135deg, #229954, #1e8449)
+        border-color rgba(39, 174, 96, 0.3)
+    
+    @media (max-width: 768px)
+      min-width auto
+      width 100%
+
+// --- Estilos del Modal ---
+.modal
+  position fixed
+  top 0
+  left 0
+  width 100%
+  height 100%
+  background rgba(0, 0, 0, 0.5)
+  display flex
+  justify-content center
+  align-items center
+  z-index 1000
+  
+  &.hidden
+    display none
+
+.modal-content
+  background var(--bg-secondary)
+  border-radius 12px
+  padding 2rem
+  width 90%
+  max-width 500px
+  box-shadow 0 4px 20px rgba(0, 0, 0, 0.3)
+  
+  h2
+    margin 0 0 1.5rem 0
+    color var(--text-primary)
+    font-size 1.5rem
+    text-align center
+
+.form-group
+  margin-bottom 1.5rem
+  
+  label
+    display block
+    margin-bottom 0.5rem
+    color var(--text-primary)
+    font-weight 500
+    font-size 0.9rem
+  
+  input
+    width 100%
+    padding 0.75rem
+    border 1px solid var(--border-color)
+    border-radius 6px
+    background var(--bg-input)
+    color var(--text-primary)
+    font-size 1rem
+    transition border-color 0.2s ease
+    
+    &:focus
+      outline none
+      border-color var(--accent-primary)
+      box-shadow 0 0 0 2px rgba(59, 130, 246, 0.1)
+
+.modal-actions
+  display flex
+  gap 1rem
+  justify-content flex-end
+  margin-top 2rem
+  
+  button
+    padding 0.75rem 1.5rem
+    border none
+    border-radius 6px
+    font-weight 600
+    font-size 0.9rem
+    cursor pointer
     transition all 0.2s ease
+    
+    &.cancel-btn
+      background var(--bg-tertiary)
+      color var(--text-secondary)
       
       &:hover
         background var(--bg-hover)
     
-    &.clean
+    &.save-btn
       background var(--accent-primary)
       color white
       
       &:hover
         background var(--accent-hover)
-        transform translateY(-1px)
-    
-    &.submit
-      background var(--success-color)
-      color white
-      
-      &:hover
-        background #5a8a5a
         transform translateY(-1px)
 </style>

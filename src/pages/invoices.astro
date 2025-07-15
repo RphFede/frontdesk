@@ -249,12 +249,35 @@ import BaseLayout from "../layouts/BaseLayout.astro"
     alert(`Editar factura ID: ${id} - Funcionalidad en desarrollo`);
   };
 
-  window.deleteInvoice = function(id) {
-    if (confirm('¿Estás seguro de que deseas eliminar esta factura?')) {
-      const index = invoicesData.findIndex(inv => inv.id === id);
-      if (index !== -1) {
-        invoicesData.splice(index, 1);
-        applyFilters();
+  window.deleteInvoice = async function(id) {
+    if (confirm('¿Estás seguro de que deseas eliminar esta factura? Esta acción no se puede deshacer.')) {
+      try {
+        const response = await fetch(`http://localhost:5000/api/bills/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          // Eliminar de la lista local y actualizar la vista
+          const index = invoicesData.findIndex(inv => inv.id === id);
+          if (index !== -1) {
+            invoicesData.splice(index, 1);
+            applyFilters();
+          }
+          
+          // Mostrar mensaje de éxito
+          alert('✅ Factura eliminada exitosamente');
+        } else {
+          // Mostrar mensaje de error del servidor
+          alert(`❌ Error: ${result.message || 'No se pudo eliminar la factura'}`);
+        }
+      } catch (error) {
+        console.error('Error al eliminar factura:', error);
+        alert('❌ Error de conexión. No se pudo eliminar la factura.');
       }
     }
   };
